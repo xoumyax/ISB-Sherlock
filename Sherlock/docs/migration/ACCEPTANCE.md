@@ -12,10 +12,10 @@ with the dashboard's manifest run 278.
 
 | Root | Path on ramius |
 |---|---|
-| `ISB_DATA` | `/home/soumya/IntelligentSelectionBlock/ISB-Sherlock-Data` |
-| `ISB_ZIPS` | `/home/soumya/IntelligentSelectionBlock/Data` (retired 2026-11-23; see below) |
-| `ISB_WORK` | `/home/soumya/IntelligentSelectionBlock/ISB-Sherlock-Work` |
-| `ISB_SCRATCH` | `/home/soumya/IntelligentSelectionBlock/ISB-Sherlock-Scratch` |
+| `ISB_DATA` | `<git root>/ISB-Sherlock-Data` |
+| `ISB_ZIPS` | `<git root>/Data` (retired 2026-11-23; see below) |
+| `ISB_WORK` | `<git root>/ISB-Sherlock-Work` |
+| `ISB_SCRATCH` | `<git root>/ISB-Sherlock-Scratch` |
 
 Recorded in `config/roots.yaml` (gitignored).
 
@@ -40,8 +40,7 @@ directories and files have a write bit). brownie, please run
 (DATASET_STRUCTURE.md §7 step 5):
 
 ```bash
-chmod -R a-w,o-rwx /home/soumya/IntelligentSelectionBlock/ISB-Sherlock-Data/malware \
-                   /home/soumya/IntelligentSelectionBlock/ISB-Sherlock-Data/goodware
+chmod -R a-w,o-rwx "$ISB_DATA/malware" "$ISB_DATA/goodware"
 ```
 
 `metadata/` is left writable by that line. I'd also make it read-only, since the
@@ -162,7 +161,7 @@ Tables (row counts on the working copy, opened `mode=ro`):
 | `files` | 117,944 | | `tlsh_clusters` | 465 |
 | `goodware_meta` | 41,271 | | | |
 
-`file_paths`: all 133,664 rows are old-cluster paths under `/home/soumya/corpus/...`,
+`file_paths`: all 133,664 rows are old-cluster paths under the old home directory's `corpus/...`,
 covering 117,932 distinct sha256. Code joins on `sha256` and never reads `path`.
 
 Enrichment readiness from the CSV: every Tier X executable (17,865) has a TLSH

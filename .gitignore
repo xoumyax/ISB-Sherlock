@@ -8,6 +8,9 @@
 /ISB-Sherlock-Dataset*/
 /sherlock-work/
 /downloads/
+# Artifacts brought from the old cluster (V1 splits, outputs, indexes, code):
+# used only to run V1 as a baseline; Sherlock never reads it
+/ISB-Sherlock-V1/
 
 # Belt and braces, anywhere in the tree: samples, archives, digests, databases
 *.bin

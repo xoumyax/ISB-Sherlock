@@ -2,8 +2,8 @@
 
 Three rules hold for every test:
 
-* The repository root is importable, so ``import sherlock`` works without
-  installing the package.
+* ``Sherlock/`` (the code folder, not the git root) is importable, so
+  ``import sherlock`` works without installing the package.
 * No test writes to a real root. ``ISB_WORK`` and ``ISB_SCRATCH`` point into
   the test's own ``tmp_path`` unless the test is marked ``needs_data``.
 * Tests that read the real dataset are marked ``needs_data`` and skip unless
@@ -18,9 +18,9 @@ from pathlib import Path
 
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+SHERLOCK_DIR = Path(__file__).resolve().parents[1]
+if str(SHERLOCK_DIR) not in sys.path:
+    sys.path.insert(0, str(SHERLOCK_DIR))
 
 
 @pytest.fixture(autouse=True)

@@ -14,20 +14,31 @@ YARAikiba agent, and it is the subject of a standalone paper.
 
 | | |
 |---|---|
-| Phase | P0, set-up on the new cluster. Next gate: **G0**, the package skeleton |
+| Phase | P0, set-up on the new cluster. **G0** (package skeleton) built and awaiting approval: [`Sherlock/docs/gates/G0.md`](Sherlock/docs/gates/G0.md) |
 | Dataset | Migrated and verified: 117,999 samples (95,718 malware, 22,281 goodware), every file hashed against its name, 0 mismatches. Reconciled with manifest run 278 in [`Sherlock/docs/migration/ACCEPTANCE.md`](Sherlock/docs/migration/ACCEPTANCE.md) |
-| Code | `Sherlock/sherlock/` not started. V1's 12 ISB modules are in `Sherlock/legacy/V1/` as the style source and parity oracle |
-| Tests | `pytest -m legacy`: 172 passed, 8 skipped (span-index tests that need V1's `StaticFeatures/`, not migrated) |
+| Code | `Sherlock/sherlock/`: `core.ir`, `core.records`, `data.roots`, `data.manifest` (G0); the other sub-packages are placeholders. V1's 12 ISB modules are in `Sherlock/legacy/V1/`, kept to run V1 as an after-the-fact baseline; Sherlock is written from scratch and not influenced by V1 (only its style and lessons are kept) |
+| Tests | `pytest`: 320 passed, 12 skipped (172 legacy + 148 unit and lessons; skips: 8 span-index tests that need V1's `StaticFeatures/`, 4 `needs_data`). `pytest -m needs_data` with `ISB_DATA` set: 4 passed |
 | Enrichment | W1–W9 not started (TLSH/sdhash collapse, alias review, source dates, rule hits, goodware, packers, labels) |
 
-The plan (phases, gates, decisions, risks) is a private dashboard; its dated
-snapshot is [`Sherlock/docs/canonical/2026-11-22/DASHBOARD_SNAPSHOT.md`](Sherlock/docs/canonical/2026-11-22/DASHBOARD_SNAPSHOT.md).
+The plan (phases, gates, decisions, risks) is a private dashboard. Its latest export
+is `SHERLOCKED.md` at the git root (local, gitignored; 23 Nov 2026), which supersedes
+the committed snapshot
+[`Sherlock/docs/canonical/2026-11-22/DASHBOARD_SNAPSHOT.md`](Sherlock/docs/canonical/2026-11-22/DASHBOARD_SNAPSHOT.md);
+use that snapshot only on a clone without `SHERLOCKED.md`. The two canonical documents
+split the ground: `SHERLOCKED.md` wins on the plan and this README wins on layout, and
+each points to the other for the rest. A change to one that touches the other's
+subject is made in both in the same change.
 
 ## Directory structure
 
 This section is the layout reference: it wins on where things live (it replaced
 `DIRECTORY_MAP.md` on 23 Nov 2026), and it is updated in the same change whenever a
 root, a top-level folder or a new kind of artifact is added.
+
+**Terms.** The *repo root* and the *git root* are the same folder: the one that
+holds `README.md`, `setup.sh` and `Sherlock/`. `Sherlock/` is the *code folder*
+(`ISB_HOME`): `pyproject.toml`, the `sherlock` package and `tests/` live there, so
+`pytest`, `ruff`, `mypy` and `python -m sherlock.cli.<name>` run from `Sherlock/`.
 
 The git repository holds code and docs only. On a cluster, the data, work and
 scratch roots sit beside `Sherlock/` and are excluded by `.gitignore`; their absolute
@@ -53,12 +64,12 @@ ISB-Sherlock/                      git root (github.com/xoumyax/ISB-Sherlock)
 │   │   └── roots.yaml             this cluster's roots (gitignored; written by setup.sh)
 │   ├── sherlock/                  the new package (from G0): core/ data/ extract/
 │   │                              grammar/ stats/ learn/ select/ cond/ gate/ eval/ cli/
-│   ├── legacy/V1/YaraGen/ISB/     V1's 12 modules, read-only reference and parity oracle
+│   ├── legacy/V1/YaraGen/ISB/     V1's 12 modules, read-only; runs the V1 baseline
 │   ├── tests/
-│   │   ├── conftest.py            repo root on sys.path; writable roots → tmp_path
+│   │   ├── conftest.py            Sherlock/ on sys.path; writable roots → tmp_path
 │   │   ├── legacy/                V1's own suites (pytest -m legacy)
 │   │   ├── unit/ lessons/         per-module tests; V1's lessons L1–L12 (from G0)
-│   │   └── integration/ parity/   needs_data tests; G2 parity against V1
+│   │   └── integration/ parity/   needs_data tests; V1 baseline comparison
 │   ├── scripts/
 │   │   ├── migration/             acceptance and reconciliation scripts, verify_names.py,
 │   │   │                          verify_destination.sh
@@ -93,12 +104,17 @@ ISB-Sherlock/                      git root (github.com/xoumyax/ISB-Sherlock)
 │   ├── indexes/                   goodware DF and span indexes, cross-family index (P3)
 │   ├── supervision/               persistence labels, aligned rule hits (P4)
 │   ├── models/                    scorer/<v>/, cond_adapter/<v>/, bytecnn/ (P3–P5)
-│   ├── parity/                    V1 fixtures for G2
-│   ├── runs/<experiment>/<arm>/   candidates, selection, rules, scan JSONL, summary.json,
-│   │                              run.json, slurm-%j.out (P3 on)
+│   ├── parity/                    V1 baseline inputs and outputs (never read by Sherlock's pipeline)
+│   ├── runs/<experiment>/<arm>/<run_id>/
+│   │                              one folder per run: run.json (commit, config, root
+│   │                              sources; no absolute paths), candidates, selection,
+│   │                              rules, scan JSONL, summary.json, slurm-%j.out (P3 on)
 │   └── reports/                   machine-written reports; reports/migration/ holds the
 │                                  verify log, archive checksums and migration records
-└── ISB-Sherlock-Scratch/          ISB_SCRATCH, temporary; safe to wipe: NOT in git
+├── ISB-Sherlock-Scratch/          ISB_SCRATCH, temporary; safe to wipe: NOT in git
+└── ISB-Sherlock-V1/ (+ .zip)      intake of V1 artifacts from the old cluster (splits,
+                                   exp2 outputs, indexes, code): untrusted, read-only;
+                                   used only to run V1 as a baseline: NOT in git
 ```
 
 The roots can live anywhere (another filesystem, a scratch volume); `beside the
@@ -125,8 +141,8 @@ tree under other names, add those names to `.gitignore` first.
 | sdhash | `Sherlock/third_party/sdhash/` (bulk mode in `PROVENANCE.md`) |
 
 **Not on this cluster** (needed later): V1's experiment artifacts (`malware_split.json`,
-`goodware_split.json`, exp2 detection outputs, goodware indexes) for G0's parity
-fixtures and G2; V1's `YaraGen/StaticFeatures/`, `Detection/`, `RuleSynth/template.py`
+`goodware_split.json`, exp2 detection outputs, goodware indexes) for running V1 as a
+baseline (not used by Sherlock); V1's `YaraGen/StaticFeatures/`, `Detection/`, `RuleSynth/template.py`
 and `Pipelines/BinaryToRule.py` for rerunning V1; the rule repositories (W4), MOTIF
 metadata (W9), DIE and UPX (W8). The dataset archives were deleted after verification,
 so on ramius `ISB_DATA` is the only copy (see `HANDOFF.md`).

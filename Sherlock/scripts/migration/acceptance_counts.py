@@ -6,7 +6,7 @@ checks that every ``dataset_path`` exists and that every file on disk has a row,
 hashes a seeded random sample of sample files against their names. It only reads
 bytes (hashing); it never executes or modifies anything under the dataset root.
 
-Usage (from the repo root, roots from the environment or config/roots.yaml):
+Usage (from ``Sherlock/``, roots from the environment or config/roots.yaml):
 
     python -I scripts/migration/acceptance_counts.py DATASET_ROOT OUT_JSON
 

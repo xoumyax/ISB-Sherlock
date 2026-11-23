@@ -31,7 +31,7 @@ LEGACY_ROOT = Path(__file__).resolve().parents[2] / "legacy" / "V1"
 if not (LEGACY_ROOT / "YaraGen" / "ISB" / "__init__.py").is_file():
     raise pytest.UsageError(
         f"V1 reference code not found at {LEGACY_ROOT}/YaraGen/ISB; "
-        "see DIRECTORY_MAP.md (legacy/V1).")
+        "see the git root's README.md, \"Directory structure\" (legacy/V1).")
 
 if str(LEGACY_ROOT) not in sys.path:
     sys.path.insert(0, str(LEGACY_ROOT))
