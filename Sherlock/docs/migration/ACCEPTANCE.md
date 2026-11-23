@@ -34,7 +34,8 @@ weren't (the dataset arrived as the 113 archives only). Extraction ran in sessio
     (118,269 members: 117,999 samples + 270 metadata files).
   - [3/3] 113 lists, **117,999 samples hashed, 0 mismatches**.
 
-**Permissions: not yet read-only.** `malware/` and `goodware/` are writable (118,382
+**Permissions: done (rechecked 2026-11-23, end of session: 0 writable under `malware/`
+and `goodware/`).** Before that: `malware/` and `goodware/` are writable (118,382
 directories and files have a write bit). brownie, please run
 (DATASET_STRUCTURE.md §7 step 5):
 
@@ -194,9 +195,8 @@ digest and an `mb_first_seen` date. The rows without TLSH are 689 `other`,
 
 ## 7. Differences and open items
 
-1. **Permissions** (§2): brownie to run the `chmod` line; decide on `metadata/`.
-   Rechecked after the archives were deleted: still writable (118,382 under
-   `malware/` and `goodware/`, 312 under `metadata/`).
+1. **Permissions** (§2): done for `malware/` and `goodware/`; `metadata/` is still
+   writable, your call.
 1a. **No second copy.** With the archives gone, `ISB_DATA` is the only copy on this
    cluster. A backup (or confirmation that the old cluster's copy is kept) is open.
 2. **Stale repo copy of DATASET_STRUCTURE.md.** `docs/dataset/` holds the 16:42
