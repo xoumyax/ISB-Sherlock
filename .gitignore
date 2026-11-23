@@ -1,0 +1,38 @@
+# Nothing but code and docs goes to GitHub. The data, work and scratch roots sit
+# beside Sherlock/ on the cluster and must never be staged: ISB-Sherlock-Data holds
+# live malware.
+/ISB-Sherlock-Data/
+/ISB-Sherlock-Work/
+/ISB-Sherlock-Scratch/
+/Data/
+/ISB-Sherlock-Dataset*/
+/sherlock-work/
+/downloads/
+
+# Belt and braces, anywhere in the tree: samples, archives, digests, databases
+*.bin
+*.zip
+*.zip.sha256
+*.sdbf
+*.pkl
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.lst
+
+# Cluster-specific roots
+**/config/roots.yaml
+
+# SLURM logs, Python and tool caches
+slurm-*.out
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Session stop files are for the person on shift, not for history
+RESUME.md
+Sherlock/CLAUDE.md
+HANDOFF.md

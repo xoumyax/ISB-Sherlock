@@ -1,0 +1,112 @@
+[
+ {
+  "id": "E1",
+  "rq": "RQ1 Effectiveness",
+  "question": "Does ISB reach higher TPR than existing generators at the same FP budget?",
+  "arms": "ISB at its default point vs yarGen (G_stats DB and stock DB), AutoPYara, AutoYara, frontier LLM given the same candidates, template (no LM)",
+  "metrics": "Family-macro TPR on held; FP/1k on G_eval and G_ood; cross-family FP; TPR at FP/1k ≤ 0.1",
+  "output": "Main table; TPR–FP curves",
+  "priority": "Must",
+  "can_start": "After G5"
+ },
+ {
+  "id": "E2",
+  "rq": "RQ2 Attribution",
+  "question": "Which stage earns the gain: filtering, shortening, ranking, conditions or the gate?",
+  "arms": "all (capped) → lint → random-k (post-lint, size-matched) → learned, pointwise + type_cover (V1) → learned, set coverage (D12) → + conditions → + FP gate; oracle-sel as ceiling",
+  "metrics": "Δ TPR and Δ FP/1k per step; paired family bootstrap; Holm",
+  "output": "Ablation ladder table",
+  "priority": "Must",
+  "can_start": "After G5"
+ },
+ {
+  "id": "E3",
+  "rq": "RQ3 Grammar",
+  "question": "What does the full YARA grammar add over hex-only and strings-only rules?",
+  "arms": "Hex only (AutoPYara-style) vs strings vs + pe module vs + math, filesize, counts vs + .NET metadata",
+  "metrics": "TPR at fixed FP/1k; strings per rule; slow-rule warnings; scan time",
+  "output": "Gain per feature group",
+  "priority": "Should",
+  "can_start": "After G5"
+ },
+ {
+  "id": "E4",
+  "rq": "RQ3 Sources",
+  "question": "Which candidate source carries detection: static strings, byte-CNN spans or both?",
+  "arms": "Static / classifier / union / analyst-endorsed; byte-CNN binary head vs retrained family head",
+  "metrics": "TPR and FP/1k per source (V1: classifier spans beat static)",
+  "output": "Source table",
+  "priority": "Should",
+  "can_start": "After G5"
+ },
+ {
+  "id": "E5",
+  "rq": "RQ4 Packing",
+  "question": "Does packer-aware selection cut FP on packed goodware without losing TPR on packed malware?",
+  "arms": "Packer-aware vs packer-unaware ISB",
+  "metrics": "FP/1k on natural-packed and self-packed goodware, per packer; TPR on packed vs unpacked malware",
+  "output": "Per-packer FP figure",
+  "priority": "Must",
+  "can_start": "After G5"
+ },
+ {
+  "id": "E6",
+  "rq": "RQ5 Label robustness",
+  "question": "Do the E1–E2 gains survive labels that are not YARA-derived?",
+  "arms": "Same deltas on Tier X, the confirmed subset, Tier B and label-free cluster-held evaluation; circularity probe",
+  "metrics": "Sign and CI of each delta per regime; delta on held samples that public rules for F match vs those they miss",
+  "output": "Robustness table",
+  "priority": "Must",
+  "can_start": "After G5 and the data cut (P2)"
+ },
+ {
+  "id": "E7",
+  "rq": "RQ6 Drift",
+  "question": "How fast does ISB degrade, and which repair rung restores it most cheaply?",
+  "arms": "Never / periodic / repair ladder (recalibrate → scorer → PEFT → full) / full at each trigger / oracle each window",
+  "metrics": "TPR and FP/1k per quarterly window of source dates (W3), 2020–2026; FP drift on dated goodware builds; GPU-hours; retrains; forgetting on old families",
+  "output": "Drift curves; cost table",
+  "priority": "Must",
+  "can_start": "After G4"
+ },
+ {
+  "id": "E8",
+  "rq": "RQ7 Operating points",
+  "question": "Do calibrated FP budgets hold out of sample?",
+  "arms": "Calibrate FP/1k at 0, 0.1 and 1 on tune; test on G_eval and G_ood",
+  "metrics": "Realized vs target FP/1k; TPR at each point",
+  "output": "Calibration figure",
+  "priority": "Should",
+  "can_start": "After G5"
+ },
+ {
+  "id": "E9",
+  "rq": "RQ8 Cost",
+  "question": "Is ISB cheap enough to run on a CPU-only laptop?",
+  "arms": "ISB stages vs yarGen vs LLM baseline",
+  "metrics": "p50/p95 latency per sample; peak memory; rules per hour; rule scan cost",
+  "output": "Cost table",
+  "priority": "Should",
+  "can_start": "After G5"
+ },
+ {
+  "id": "E10",
+  "rq": "Diagnostic",
+  "question": "What does the scorer learn?",
+  "arms": "Feature importance; PU class-prior sweep; pointwise vs set-coverage selection at matched k",
+  "metrics": "PR-AUC vs prevalence baseline (V1: 0.171 vs 0.038); gain importances",
+  "output": "Feature-importance figure",
+  "priority": "Could",
+  "can_start": "After G3"
+ },
+ {
+  "id": "E11",
+  "rq": "Optional",
+  "question": "Would analysts deploy the rules?",
+  "arms": "Blind review of a sample of rules per arm by several analysts",
+  "metrics": "Would-deploy rate; edits needed; inter-rater agreement",
+  "output": "Small user-study table",
+  "priority": "Could",
+  "can_start": "After G6"
+ }
+]

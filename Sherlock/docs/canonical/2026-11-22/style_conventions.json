@@ -1,0 +1,114 @@
+[
+ {
+  "id": "docstrings",
+  "area": "Module docstrings",
+  "convention": "One-line purpose, then the why: failure modes, measured numbers with their dates, and the spec section",
+  "v1_example": "supervision.py records the label tautology it measured (agreement 1.000000)",
+  "sherlock": "Keep",
+  "note": "Cite RQ4v2 and enrichment-spec sections"
+ },
+ {
+  "id": "imports",
+  "area": "Imports and exports",
+  "convention": "from __future__ import annotations; an explicit __all__ in every module; the package __init__ re-exports, grouped by module",
+  "v1_example": "__init__.py",
+  "sherlock": "Keep",
+  "note": ""
+ },
+ {
+  "id": "config",
+  "area": "Configuration",
+  "convention": "Frozen dataclass *Config with defaults; a #: comment on each knob saying why; a module-level DEFAULT_CONFIG",
+  "v1_example": "BudgetConfig.free_min_prevalence",
+  "sherlock": "Keep",
+  "note": "YAML loads into the same dataclasses"
+ },
+ {
+  "id": "results",
+  "area": "Results",
+  "convention": "Small dataclasses with summary(), to_dict() and from_dict(); verdict objects are truthy",
+  "v1_example": "Expressibility, GoodwareVerdict",
+  "sherlock": "Keep",
+  "note": ""
+ },
+ {
+  "id": "constants",
+  "area": "Type constants",
+  "convention": "Plain string constants on a class, not Enum, so JSONL round-trips need no conversion",
+  "v1_example": "CType",
+  "sherlock": "Keep",
+  "note": ""
+ },
+ {
+  "id": "errors",
+  "area": "Errors",
+  "convention": "ValueError naming the fix for misuse; NotImplementedError instead of a silent fallback; leakage guards raise, never warn",
+  "v1_example": "random_k without size_match; analyst arm without a scorer",
+  "sherlock": "Keep",
+  "note": ""
+ },
+ {
+  "id": "degrade",
+  "area": "Unknown input",
+  "convention": "Degrade with a recorded reason rather than crash a run",
+  "v1_example": "canonical_ctype → unknown_type; dropped[reason]",
+  "sherlock": "Keep",
+  "note": ""
+ },
+ {
+  "id": "determinism",
+  "area": "Determinism",
+  "convention": "Fixed seed; per-family RNG Random(f\"{seed}:{family}\"); stable sorts tie-broken on candidate.key()",
+  "v1_example": "isb.py",
+  "sherlock": "Keep",
+  "note": ""
+ },
+ {
+  "id": "deps",
+  "area": "Heavy dependencies",
+  "convention": "numpy and lightgbm imported inside functions; never yaramod at module scope (import-order clash with HF evaluate and TensorFlow)",
+  "v1_example": "salience.py, grammar.py",
+  "sherlock": "Keep",
+  "note": ""
+ },
+ {
+  "id": "typing",
+  "area": "Typing",
+  "convention": "Full hints; abstract inputs (Sequence, Mapping), concrete returns (list, dict); X | None",
+  "v1_example": "Every module",
+  "sherlock": "Keep",
+  "note": "Add mypy on core/ and select/"
+ },
+ {
+  "id": "layout",
+  "area": "Layout",
+  "convention": "# -- section -- separators; private _helpers; about 88 columns",
+  "v1_example": "isb.py",
+  "sherlock": "Keep",
+  "note": "Enforce with ruff"
+ },
+ {
+  "id": "logging",
+  "area": "Logging",
+  "convention": "None in library code; records carry stats and drop reasons",
+  "v1_example": "No logging or print in any V1 module",
+  "sherlock": "Add",
+  "note": "Module loggers in data/ and cli/ only; the library stays silent"
+ },
+ {
+  "id": "paths",
+  "area": "Paths",
+  "convention": "Drivers hard-code corpus roots",
+  "v1_example": "run_isb.py, phase0_corpus_splits.py",
+  "sherlock": "Change",
+  "note": "Config roots and manifest sha256 lookups only"
+ },
+ {
+  "id": "tests",
+  "area": "Tests",
+  "convention": "Docstrings say \"a test pins that\"; tests were not in the archive",
+  "v1_example": "supervision.py",
+  "sherlock": "Add",
+  "note": "pytest per module; each V1 lesson as a named test; parity fixtures"
+ }
+]

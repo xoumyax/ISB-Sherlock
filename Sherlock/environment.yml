@@ -1,0 +1,25 @@
+# Starting point for the `sherlock` conda env. Versions are deliberately
+# unpinned here: after the first solve, run
+#   conda env export --no-builds > environment.lock.yml
+# and commit the lock file. Rebuild from the lock file from then on.
+name: sherlock
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - pandas
+  - pyarrow
+  - scikit-learn
+  - lightgbm
+  - pyyaml
+  - pefile
+  - yara-python
+  - python-magic
+  - pytest>=7
+  - ruff
+  - mypy
+  - pip:
+      - dnfile
+      - py-tlsh   # not on conda-forge (only tlsh-tools, no Python module); PyPI sdist, built with g++

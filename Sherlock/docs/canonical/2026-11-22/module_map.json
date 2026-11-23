@@ -1,0 +1,191 @@
+[
+ {
+  "id": "ir",
+  "module": "core/ir.py",
+  "role": "Candidate IR and type space; render form vs match form",
+  "v1": "candidate.py (411 lines)",
+  "change": "Each occurrence keeps sha256, section and offset, so W4 hits align by offset; CType stays plain strings",
+  "phase": "P3",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "records",
+  "module": "core/records.py",
+  "role": "Typed run records: selections, drop reasons, summaries; JSONL I/O",
+  "v1": "isb.py (Selection)",
+  "change": "One record schema for every stage, written to runs/<experiment>/<arm>/",
+  "phase": "P3",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "manifest",
+  "module": "data/manifest.py",
+  "role": "sha256 → dataset_path from sherlock_manifest.csv; manifest.sqlite joined on sha256; split, cluster, date and label lookups",
+  "v1": "Drivers with hard-coded roots",
+  "change": "No paths in artifacts (H7); manifest.sqlite's file_paths are dead old-cluster paths; guards raise when training code touches F_dev or F_test",
+  "phase": "P3",
+  "kind": "New"
+ },
+ {
+  "id": "pe",
+  "module": "extract/pe.py",
+  "role": "Strings by section, imports, exports, rich header, resources, VersionInfo",
+  "v1": "V1 extraction cache",
+  "change": "Reads V1's cache by sha256; strings keep section and offset",
+  "phase": "P3",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "dotnet",
+  "module": "extract/dotnet.py",
+  "role": "CLR metadata via dnfile: #Strings, #US, type and member refs, assembly info",
+  "v1": "—",
+  "change": "Closes the .NET gap (D9)",
+  "phase": "P3",
+  "kind": "New"
+ },
+ {
+  "id": "packing",
+  "module": "extract/packing.py",
+  "role": "DIE tag, section entropy, stub detection, unpacked-child links",
+  "v1": "—",
+  "change": "Packer features for the scorer and E5, from W8's tables",
+  "phase": "P3",
+  "kind": "New"
+ },
+ {
+  "id": "spans",
+  "module": "extract/spans.py",
+  "role": "Byte-CNN attribution spans",
+  "v1": "Classifier source",
+  "change": "Family head retrained on the frozen F_train (D10)",
+  "phase": "P3",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "express",
+  "module": "grammar/express.py",
+  "role": "Expressibility, escaping, modifier legality, rendering",
+  "v1": "grammar.py (476 lines)",
+  "change": "Same rules, each test tied to a section of the YARA docs",
+  "phase": "P3",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "hygiene",
+  "module": "grammar/hygiene.py",
+  "role": "Curated stoplist and trivial-hex checks",
+  "v1": "stoplist.py (431 lines)",
+  "change": "Active in every arm; type-aware",
+  "phase": "P3",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "support",
+  "module": "stats/support.py",
+  "role": "Family pooling and support statistics",
+  "v1": "pooling.py (406 lines)",
+  "change": "Support counted over TLSH-30 clusters (W1), not files; rates only",
+  "phase": "P3",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "goodware",
+  "module": "stats/goodware.py",
+  "role": "Type-routed goodware oracle: string DF and span presence",
+  "v1": "goodware.py (105 lines)",
+  "change": "Per-source caps from goodware_provenance; evidence kept per origin",
+  "phase": "P3",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "labels",
+  "module": "learn/labels.py",
+  "role": "Persistence labels: does a gen candidate survive into newer samples?",
+  "v1": "supervision.py (291 lines)",
+  "change": "Time-ordered support from W3 dates; F_train only, guarded",
+  "phase": "P4",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "hits",
+  "module": "learn/hits.py",
+  "role": "Family-matched analyst evidence from rule string hits",
+  "v1": "mining.py (329 lines)",
+  "change": "Offset-aligned W4 hits with real rule families replace the name-stripped term index",
+  "phase": "P4",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "scorer",
+  "module": "learn/scorer.py",
+  "role": "GBDT persistence scorer with a prior fallback",
+  "v1": "salience.py (303 lines)",
+  "change": "Grouped family holdout; tuned on F_dev only",
+  "phase": "P4",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "cover",
+  "module": "select/cover.py",
+  "role": "Pick the candidate set with the highest expected held coverage under the string cap",
+  "v1": "budget.py (159 lines)",
+  "change": "Replaces pointwise ranking plus type round-robin (D12, proposed)",
+  "phase": "P4",
+  "kind": "New"
+ },
+ {
+  "id": "arms",
+  "module": "select/arms.py",
+  "role": "The arm ladder: all, lint, prevalence_k, random_k, learned, analyst, oracle",
+  "v1": "isb.py (249 lines)",
+  "change": "Same ordering rules; adds the coverage arm",
+  "phase": "P4",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "template",
+  "module": "cond/template.py",
+  "role": "Strong and weak strings, N-of group, module terms",
+  "v1": "condition.py (198 lines)",
+  "change": "Verified-absence rule kept",
+  "phase": "P5",
+  "kind": "Rewrite"
+ },
+ {
+  "id": "adapter",
+  "module": "cond/adapter.py",
+  "role": "Grammar-constrained condition adapter: pe, math, filesize, counts, .NET",
+  "v1": "—",
+  "change": "Learns the condition shape; tuned on F_dev",
+  "phase": "P5",
+  "kind": "New"
+ },
+ {
+  "id": "gate",
+  "module": "gate/fp.py",
+  "role": "FP gate on G_stats: repair or reject",
+  "v1": "—",
+  "change": "Operating points 0, 0.1 and 1 FP/1k",
+  "phase": "P5",
+  "kind": "New"
+ },
+ {
+  "id": "eval",
+  "module": "eval/",
+  "role": "Namespaced compile, single-pass scan, bootstrap, paired tests, Holm",
+  "v1": "V1 drivers",
+  "change": "Self-match excluded from TP by construction",
+  "phase": "P6",
+  "kind": "New"
+ },
+ {
+  "id": "cli",
+  "module": "cli/",
+  "role": "Drivers: extract, label, train, select, render, gate, scan",
+  "v1": "run_isb.py, run_exp2.py …",
+  "change": "Config roots and run ids only; drivers log, library code returns records",
+  "phase": "P3–P6",
+  "kind": "Rewrite"
+ }
+]

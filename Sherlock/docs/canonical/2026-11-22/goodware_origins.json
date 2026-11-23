@@ -1,0 +1,10 @@
+[
+  {"id": "ucsb", "origin": "ucsb_goodware", "executables": 15029, "vendor_evidence_pct": 96.4, "paper_use": "Keep", "note": "V1 G_stats/G_eval backbone; re-split by vendor"},
+  {"id": "win8", "origin": "windows_8_6.2.9200", "executables": 2868, "vendor_evidence_pct": 99.5, "paper_use": "Keep", "note": "Newest OS image held; split by OS build"},
+  {"id": "sourceforge", "origin": "sourceforge", "executables": 1062, "vendor_evidence_pct": 42.7, "paper_use": "Keep", "note": "Weakest vendor evidence"},
+  {"id": "cnet", "origin": "cnet", "executables": 836, "vendor_evidence_pct": 89.4, "paper_use": "Keep", "note": ""},
+  {"id": "softonic", "origin": "softonic", "executables": 777, "vendor_evidence_pct": 92.7, "paper_use": "Exclude", "note": "Barred from paper splits (kit rule 7); V1 used it"},
+  {"id": "linux", "origin": "Ubuntu 26.04/26.10, Debian 13", "executables": 1470, "vendor_evidence_pct": 0, "paper_use": "Out of scope", "note": "Unique ELF; no Windows benefit"},
+  {"id": "winget", "origin": "winget expansion + pilot", "executables": 151, "vendor_evidence_pct": 100, "paper_use": "Keep", "note": "Current Windows apps; 66 packages skipped at the 8 GiB cap"},
+  {"id": "selfpacked", "origin": "selfpacked_upx", "executables": 100, "vendor_evidence_pct": 83, "paper_use": "Packer ablation", "note": "UPX children; excluded from the balanced view"}
+]

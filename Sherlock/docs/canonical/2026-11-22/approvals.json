@@ -1,0 +1,74 @@
+[
+ {
+  "id": "A1",
+  "approval": "Download cap (was D4)",
+  "recommendation": "Raise from 8 GiB to about 100 GiB, budgeted per source: Windows images ~20 GB, winget ~40 GB, NuGet and Linux packages the rest. Re-budget after the first 10% of each pull",
+  "needed_by": "Week 1",
+  "needed_date": "2026-11-29",
+  "blocks": "W5, W6, W7",
+  "status": "Awaiting you"
+ },
+ {
+  "id": "A2",
+  "approval": "MOTIF archive and the 33-file acquisition (was D3)",
+  "recommendation": "Approve both",
+  "needed_by": "Week 1",
+  "needed_date": "2026-11-29",
+  "blocks": "W9",
+  "status": "Awaiting you"
+ },
+ {
+  "id": "A3",
+  "approval": "Run third-party config extractors over malware",
+  "recommendation": "Approve, inside a no-network container with CPU, memory and time limits",
+  "needed_by": "Week 1",
+  "needed_date": "2026-11-29",
+  "blocks": "W9",
+  "status": "Awaiting you"
+ },
+ {
+  "id": "A4",
+  "approval": "Send the VirusTotal, Malpedia and EMBER/BODMAS requests",
+  "recommendation": "Send under your name this week; nothing waits on the replies",
+  "needed_by": "Week 1",
+  "needed_date": "2026-11-29",
+  "blocks": "W9",
+  "status": "Awaiting you"
+ },
+ {
+  "id": "A5",
+  "approval": "A Windows VM with no network",
+  "recommendation": "Provision one for Windows-only packers, ConfuserEx and image servicing",
+  "needed_by": "Week 2",
+  "needed_date": "2026-12-06",
+  "blocks": "W8; W5 update snapshots",
+  "status": "Awaiting you"
+ },
+ {
+  "id": "A6",
+  "approval": "Commercial protector for the packer ablation",
+  "recommendation": "Pick one (Themida, VMProtect, Enigma or Obsidium) after reading its trial EULA",
+  "needed_by": "Week 2",
+  "needed_date": "2026-12-06",
+  "blocks": "W8",
+  "status": "Awaiting you"
+ },
+ {
+  "id": "A7",
+  "approval": "Source for Windows 10 22H2 and Windows 11 23H2 images",
+  "recommendation": "The university's Microsoft software portal or an existing licensed image",
+  "needed_by": "Week 2",
+  "needed_date": "2026-12-06",
+  "blocks": "W5",
+  "status": "Awaiting you"
+ },
+ {
+  "id": "A8",
+  "approval": "ELF scope (was D8)",
+  "recommendation": "Keep ELF goodware as a separate pool, out of the paper's denominators",
+  "needed_by": "Week 2",
+  "needed_date": "2026-12-06",
+  "blocks": "W6",
+  "status": "Awaiting you"
+ }
+]

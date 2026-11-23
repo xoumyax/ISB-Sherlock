@@ -1,0 +1,82 @@
+[
+ {
+  "id": "dash",
+  "title": "This dashboard",
+  "role": "Canonical",
+  "holds": "Plan, dates, gates, decisions, risks and status. Wins on any conflict about the plan",
+  "where": "Here",
+  "url": ""
+ },
+ {
+  "id": "dirmap",
+  "title": "DIRECTORY_MAP.md",
+  "role": "Canonical",
+  "holds": "Where everything lives on the new cluster: roots, repo, dataset and work tree. Wins on any conflict about layout",
+  "where": "Sherlock repo root",
+  "url": ""
+ },
+ {
+  "id": "guide",
+  "title": "CLAUDE.md",
+  "role": "Supporting",
+  "holds": "Guidebook for Claude Code: working rules, safety, style, tests and inherited lessons",
+  "where": "Sherlock repo root",
+  "url": ""
+ },
+ {
+  "id": "dsstruct",
+  "title": "DATASET_STRUCTURE.md",
+  "role": "Source",
+  "holds": "The migrated dataset: folders, counts, manifest columns and setup steps",
+  "where": "Archive folder; copy in docs/dataset/",
+  "url": ""
+ },
+ {
+  "id": "enrich",
+  "title": "ISB dataset enrichment spec",
+  "role": "Supporting",
+  "holds": "Procedures, commands and manifest tables for W1–W9",
+  "where": "Claude Doc",
+  "url": "https://claude.ai/artifact/FVj1gVzYgG4jAsNxc12xhB"
+ },
+ {
+  "id": "rq4",
+  "title": "RQ4v2_SPEC.md",
+  "role": "Supporting",
+  "holds": "Evaluation protocol, Candidate IR, split definitions, type-and-shape prior",
+  "where": "YARA-LLM project docs",
+  "url": ""
+ },
+ {
+  "id": "dsplan",
+  "title": "ISB_DATASET_PLAN.md",
+  "role": "Supporting",
+  "holds": "v0 and v1 sizes, rule of three, packer list; its schedule is superseded here",
+  "where": "YARA-LLM project docs",
+  "url": ""
+ },
+ {
+  "id": "review",
+  "title": "ISB dataset library review, 22 Nov 2026",
+  "role": "Source",
+  "holds": "Every \"today\" figure (manifest run 278)",
+  "where": "metadata/project_state/ in the dataset",
+  "url": ""
+ },
+ {
+  "id": "v1code",
+  "title": "V1-Legacy ISB package",
+  "role": "Reference",
+  "holds": "12 modules, 3,474 lines: the style source and G2's parity oracle",
+  "where": "legacy/V1 in the Sherlock repo",
+  "url": ""
+ },
+ {
+  "id": "agent",
+  "title": "Agent chapter roadmap",
+  "role": "Related",
+  "holds": "The next paper and the open-source release; shares schedule risk R6",
+  "where": "Claude Doc",
+  "url": "https://claude.ai/artifact/H32o66aCwQDynT4VVudLVd"
+ }
+]

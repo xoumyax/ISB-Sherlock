@@ -1,0 +1,86 @@
+[
+ {
+  "id": "L1",
+  "lesson": "Render form and match form stay separate",
+  "evidence": "Rendering the case-folded form writes rules that cannot match the sample",
+  "source": "candidate.py",
+  "test": "test_render_never_uses_norm"
+ },
+ {
+  "id": "L2",
+  "lesson": "Hex spans go to the span index",
+  "evidence": "The string index scores every span as absent from goodware, the very verdict that promotes it",
+  "source": "goodware.py",
+  "test": "test_hex_span_routed_to_span_index"
+ },
+ {
+  "id": "L3",
+  "lesson": "Labels must not be computable from features",
+  "evidence": "Support on the feature samples made the label equal prevalence ≥ 0.20 and no goodware: agreement 1.000000, PR-AUC 1.0",
+  "source": "supervision.py",
+  "test": "test_label_support_from_held_side"
+ },
+ {
+  "id": "L4",
+  "lesson": "Rates only, never raw support counts",
+  "evidence": "n_containing out-ranked prevalence 2,292 to 199 by keying on family size",
+  "source": "pooling.py",
+  "test": "test_features_are_rates"
+ },
+ {
+  "id": "L5",
+  "lesson": "Budget-exempt hashes need prevalence",
+  "evidence": "guloader got 8 ranked candidates and 59 hash terms",
+  "source": "budget.py",
+  "test": "test_free_types_prevalence_gated"
+ },
+ {
+  "id": "L6",
+  "lesson": "No plain top-k cut",
+  "evidence": "853 FP per 1,000 goodware: top candidates cluster in one type",
+  "source": "budget.py",
+  "test": "No top_k in the library; negative control only"
+ },
+ {
+  "id": "L7",
+  "lesson": "Never any of them; strong strings need verified absence",
+  "evidence": "One generic string made a gold rule match 5 of 5 goodware",
+  "source": "condition.py",
+  "test": "test_strong_requires_scored_absence"
+ },
+ {
+  "id": "L8",
+  "lesson": "The stoplist runs in every arm",
+  "evidence": "Generic section names are shorter than the DF index minimum, so DF never sees them",
+  "source": "stoplist.py",
+  "test": "test_stoplist_section_names"
+ },
+ {
+  "id": "L9",
+  "lesson": "random_k is post-lint and matched on the budgeted count",
+  "evidence": "A control drawn from another pool or size answers a different question",
+  "source": "isb.py",
+  "test": "test_random_k_matches_learned_budget"
+ },
+ {
+  "id": "L10",
+  "lesson": "No silent fallbacks; peeking arms are flagged",
+  "evidence": "An analyst arm that mirrored learned would fake independent agreement",
+  "source": "isb.py",
+  "test": "test_analyst_arm_requires_scorer"
+ },
+ {
+  "id": "L11",
+  "lesson": "Scorer holdout grouped by family, with a minimum of positives",
+  "evidence": "Row holdouts report memorisation; under 30 positives the prior scorer is used",
+  "source": "salience.py",
+  "test": "test_holdout_grouped_by_family"
+ },
+ {
+  "id": "L12",
+  "lesson": "Leakage guards raise",
+  "evidence": "A guard that defaults off is an accidental off-switch",
+  "source": "pooling.py, supervision.py",
+  "test": "test_eval_family_cannot_label"
+ }
+]

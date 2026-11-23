@@ -1,0 +1,58 @@
+[
+ {
+  "id": "CH1",
+  "date": "2026-11-22",
+  "change": "G1 split freeze moves from 8 Jan 2027 to 13 Dec 2026, with 20 Dec as fallback",
+  "why": "Enrichment W1–W9 replaces the P1 data foundation and fits in three weeks",
+  "affects": "P1, P2, R6"
+ },
+ {
+  "id": "CH2",
+  "date": "2026-11-22",
+  "change": "Windows, Linux-shipped PE/.NET and NuGet goodware, and the self-packed set, land before the freeze",
+  "why": "Anything that feeds G_stats must be in before the split; afterwards only new-vendor G_eval/G_ood and labels may grow",
+  "affects": "P2, E5, stop criteria"
+ },
+ {
+  "id": "CH3",
+  "date": "2026-11-22",
+  "change": "Sherlock is written from scratch in V1's style; V1 becomes the parity oracle",
+  "why": "Your decision (D11)",
+  "affects": "G0, G2, P3, Code section"
+ },
+ {
+  "id": "CH4",
+  "date": "2026-11-22",
+  "change": "The scorer gains family-matched analyst string hits; set-coverage selection proposed",
+  "why": "V1's learned arm lost to prevalence_k; named rule sources make family matching possible",
+  "affects": "P4, D12, E2, E10"
+ },
+ {
+  "id": "CH5",
+  "date": "2026-11-22",
+  "change": "Source dates (W3) replace inventory time; drift windows are cut before the freeze",
+  "why": "E7 and gen/held need real dates (finding H6)",
+  "affects": "E7, dependencies"
+ },
+ {
+  "id": "CH6",
+  "date": "2026-11-22",
+  "change": "Approvals A1–A8 carry D3, D4 and D8 and add five more",
+  "why": "They gate the enrichment workstreams",
+  "affects": "Decisions"
+ },
+ {
+  "id": "CH7",
+  "date": "2026-11-22",
+  "change": "The project moves to a new cluster from the 22 Nov checkpoint, before enrichment; Sherlock starts there from an empty package",
+  "why": "Your decision. The dataset travels as 113 verified archives with relative paths; old-cluster paths are dead",
+  "affects": "P0, P1 dates, R13"
+ },
+ {
+  "id": "CH8",
+  "date": "2026-11-22",
+  "change": "The D6 layout splits into a code repo and separate data and work roots, mapped in DIRECTORY_MAP.md",
+  "why": "The repo stays small and versioned; derived artifacts go where the space is",
+  "affects": "D6, Code section"
+ }
+]

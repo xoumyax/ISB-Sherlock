@@ -1,0 +1,19 @@
+# Cluster-specific roots: never committed
+config/roots.yaml
+
+# Never commit samples, archives or similarity digests
+*.bin
+*.zip
+*.sdbf
+*.pkl
+
+# Python and tool caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Session stop files are for the person on shift, not for history
+RESUME.md
