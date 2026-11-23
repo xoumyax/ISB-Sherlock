@@ -79,8 +79,39 @@ if [[ -z "$DATA$WORK$SCRATCH" && -f "$ROOTS" && $FORCE == 0 ]]; then
     SCRATCH=$(yaml_key scratch_root)
     say "using the roots in $ROOTS"
 fi
-[[ -n "$DATA" && -n "$WORK" && -n "$SCRATCH" ]] \
-    || die "give --data, --work and --scratch (or --beside-repo); there are no default paths"
+# First run with no roots given: ask (in a terminal), or say exactly what to pass.
+if [[ -z "$DATA" || -z "$WORK" || -z "$SCRATCH" ]]; then
+    if [[ -t 0 ]]; then
+        echo
+        echo "No roots yet. Where do the dataset, work and scratch folders live?"
+        echo "  1) beside this checkout: $HERE/ISB-Sherlock-{Data,Work,Scratch}"
+        echo "     (new, empty folders: pick this if the dataset isn't on this machine yet)"
+        echo "  2) somewhere else, e.g. an existing dataset from another checkout"
+        read -r -p "Choose 1 or 2: " choice
+        case "$choice" in
+            1) DATA="$HERE/ISB-Sherlock-Data"; WORK="$HERE/ISB-Sherlock-Work"
+               SCRATCH="$HERE/ISB-Sherlock-Scratch" ;;
+            2) [[ -n "$DATA" ]] || read -r -e -p "  dataset root (ISB_DATA): " DATA
+               [[ -n "$WORK" ]] || read -r -e -p "  work root    (ISB_WORK): " WORK
+               [[ -n "$SCRATCH" ]] || read -r -e -p "  scratch root (ISB_SCRATCH): " SCRATCH ;;
+            *) die "no choice made; nothing written" ;;
+        esac
+        DATA="${DATA/#\~/$HOME}"; WORK="${WORK/#\~/$HOME}"; SCRATCH="${SCRATCH/#\~/$HOME}"
+    fi
+fi
+if [[ -z "$DATA" || -z "$WORK" || -z "$SCRATCH" ]]; then
+    cat >&2 <<EOF
+setup.sh: no roots given and no $ROOTS yet. There are no default paths; run one of:
+
+  ./setup.sh --beside-repo        # new roots in $HERE/ISB-Sherlock-{Data,Work,Scratch}
+  ./setup.sh --data /path/to/ISB-Sherlock-Data \\
+             --work /path/to/ISB-Sherlock-Work \\
+             --scratch /path/to/ISB-Sherlock-Scratch   # e.g. an existing dataset
+
+(or set ISB_DATA, ISB_WORK and ISB_SCRATCH, or run it in a terminal to be asked)
+EOF
+    exit 1
+fi
 abspath() { realpath -m "$1"; }
 DATA=$(abspath "$DATA"); WORK=$(abspath "$WORK"); SCRATCH=$(abspath "$SCRATCH")
 for p in "$DATA" "$WORK" "$SCRATCH"; do

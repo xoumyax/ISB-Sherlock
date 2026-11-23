@@ -108,10 +108,11 @@ cd ISB-Sherlock
 ### 2. Environment and roots: `setup.sh`
 
 ```bash
+./setup.sh                                                 # first run in a terminal: asks where the roots go
 ./setup.sh --beside-repo                                   # roots next to Sherlock/
 # or choose each root yourself:
 ./setup.sh --data /big/ISB-Sherlock-Data --work /big/ISB-Sherlock-Work --scratch /tmp/me/isb
-./setup.sh                                                 # later re-runs: reuse roots.yaml
+                                                           # later re-runs reuse roots.yaml
 ```
 
 It creates (or reuses) the `sherlock` conda env from `environment.lock.yml`, writes
