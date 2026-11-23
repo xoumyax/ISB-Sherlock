@@ -25,6 +25,10 @@ snapshot is [`Sherlock/docs/canonical/2026-11-22/DASHBOARD_SNAPSHOT.md`](Sherloc
 
 ## Directory structure
 
+This section is the layout reference: it wins on where things live (it replaced
+`DIRECTORY_MAP.md` on 23 Nov 2026), and it is updated in the same change whenever a
+root, a top-level folder or a new kind of artifact is added.
+
 The git repository holds code and docs only. On a cluster, the data, work and
 scratch roots sit beside `Sherlock/` and are excluded by `.gitignore`; their absolute
 paths live only in `Sherlock/config/roots.yaml` (never committed).
@@ -35,9 +39,12 @@ ISB-Sherlock/                      git root (github.com/xoumyax/ISB-Sherlock)
 ├── setup.sh                       conda env, roots.yaml, health check
 ├── download.sh                    fetch and verify the dataset archives
 ├── .gitignore                     keeps every data root and sample type out of git
+├── SHERLOCKED.md                  canonical plan, latest dashboard export (local, gitignored)
+├── HANDOFF.md                     session-to-session state on this cluster (local, gitignored)
 │
 ├── Sherlock/                      the code repo (ISB_HOME)
-│   ├── DIRECTORY_MAP.md           where everything lives; wins on layout
+│   ├── CLAUDE.md                  working rules for Claude Code (local, gitignored)
+│   ├── STARTER_PROMPT.md          prompt for the next Claude Code session (local, gitignored)
 │   ├── pyproject.toml             pytest, ruff and mypy settings
 │   ├── environment.yml            conda spec (unpinned)
 │   ├── environment.lock.yml       exact env from the first solve; setup.sh uses it
@@ -75,16 +82,54 @@ ISB-Sherlock/                      git root (github.com/xoumyax/ISB-Sherlock)
 │       ├── build/                             organiser script, summary, old paths
 │       └── project_state/                     checkpoint manifest.sqlite, reports,
 │                                              dataset kit, V1 corpus manifest
-├── ISB-Sherlock-Work/             ISB_WORK, every derived artifact: NOT in git
-│   ├── manifest/                  working manifest.sqlite + CHECKPOINT.sha256
-│   ├── reports/migration/         verification logs, archive checksums, migration records
-│   └── enrich/ splits/ cache/ indexes/ models/ runs/ …   (as phases produce them)
+├── ISB-Sherlock-Work/             ISB_WORK, every derived artifact, keyed by sha256, no
+│   │                              absolute paths inside (H7): NOT in git
+│   ├── manifest/                  working manifest.sqlite (+ enrichment tables, W1–W9)
+│   │                              and CHECKPOINT.sha256 of the untouched original
+│   ├── enrich/W1/ … W9/           each workstream's raw outputs before they load (P1)
+│   ├── splits/                    malware_split.json, goodware_split.json,
+│   │                              drift_windows.json, each with a .sha256 (G1)
+│   ├── cache/extract/             extraction cache, sharded by sha256[:2] (P3)
+│   ├── indexes/                   goodware DF and span indexes, cross-family index (P3)
+│   ├── supervision/               persistence labels, aligned rule hits (P4)
+│   ├── models/                    scorer/<v>/, cond_adapter/<v>/, bytecnn/ (P3–P5)
+│   ├── parity/                    V1 fixtures for G2
+│   ├── runs/<experiment>/<arm>/   candidates, selection, rules, scan JSONL, summary.json,
+│   │                              run.json, slurm-%j.out (P3 on)
+│   └── reports/                   machine-written reports; reports/migration/ holds the
+│                                  verify log, archive checksums and migration records
 └── ISB-Sherlock-Scratch/          ISB_SCRATCH, temporary; safe to wipe: NOT in git
 ```
 
 The roots can live anywhere (another filesystem, a scratch volume); `beside the
 repo` is just the layout used on the first cluster. If you put them inside the git
 tree under other names, add those names to `.gitignore` first.
+
+### Where is…?
+
+| Looking for | Go to |
+|---|---|
+| A phase, gate, date, decision, risk or approval | `SHERLOCKED.md` (offline: `Sherlock/docs/canonical/<latest>/`) |
+| Where things stand on this cluster | `HANDOFF.md`, then `Sherlock/docs/sessions/<latest>.md` |
+| A sample's file | `ISB_DATA/<dataset_path>` from `metadata/sherlock_manifest.csv`, keyed by `sha256` |
+| Its family label | `mb_family` (Tier X, never an evaluation label); `motif_family`, `motif_tier` (Tier A) |
+| Its first-seen date | `mb_first_seen`; raw exports in `metadata/source_metadata/` |
+| Its TLSH digest / packer | `tlsh` (empty where it can't be computed); `die_packed`, `die_packer` |
+| Its parent (UPX child, archive member) | `parent_sha256`, with `selfpacked_child` / `archive_member` in `flags` |
+| Softonic files (barred from paper splits) | `any_softonic` in `flags` |
+| PE/ELF metadata, alias graph, rule joins | `ISB_WORK/manifest/manifest.sqlite`, joined on `sha256` (never read `file_paths.path`: dead old-cluster paths) |
+| Family sizes | count `folder` in the manifest; the migration copy of `family_index.csv` is in `ISB_WORK/reports/migration/source/` |
+| Alias review, pool conflicts, dataset kit, V1 corpus manifest | `ISB_DATA/metadata/project_state/` (`ISB-Corpus-Update/reports/`, `…/yaragen-dataset-kit/`, `ISB-Current-Corpus/_manifest/`) |
+| Migration evidence (verify log, checksums, reconciliation) | `ISB_WORK/reports/migration/`; the write-up is `Sherlock/docs/migration/ACCEPTANCE.md` |
+| V1 code and tests | `Sherlock/legacy/V1/YaraGen/ISB/`, `Sherlock/tests/legacy/` |
+| sdhash | `Sherlock/third_party/sdhash/` (bulk mode in `PROVENANCE.md`) |
+
+**Not on this cluster** (needed later): V1's experiment artifacts (`malware_split.json`,
+`goodware_split.json`, exp2 detection outputs, goodware indexes) for G0's parity
+fixtures and G2; V1's `YaraGen/StaticFeatures/`, `Detection/`, `RuleSynth/template.py`
+and `Pipelines/BinaryToRule.py` for rerunning V1; the rule repositories (W4), MOTIF
+metadata (W9), DIE and UPX (W8). The dataset archives were deleted after verification,
+so on ramius `ISB_DATA` is the only copy (see `HANDOFF.md`).
 
 ## Setup
 
@@ -194,7 +239,6 @@ python -I scripts/migration/verify_names.py "$ISB_DATA" <list.lst>   # spot-chec
 - Work proceeds in gates (G0…G6); each passes when its note in `Sherlock/docs/gates/`
   is approved.
 
-More: [`Sherlock/DIRECTORY_MAP.md`](Sherlock/DIRECTORY_MAP.md) (layout),
-[`Sherlock/docs/dataset/DATASET_STRUCTURE.md`](Sherlock/docs/dataset/DATASET_STRUCTURE.md)
+More: [`Sherlock/docs/dataset/DATASET_STRUCTURE.md`](Sherlock/docs/dataset/DATASET_STRUCTURE.md)
 (dataset columns and folders), [`Sherlock/third_party/sdhash/PROVENANCE.md`](Sherlock/third_party/sdhash/PROVENANCE.md)
 (sdhash in bulk mode).

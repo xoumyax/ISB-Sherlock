@@ -158,7 +158,7 @@ fi
 # the dataset root (download.sh fills it).
 say "creating directories"
 mkdir -p "$DATA" "$SCRATCH"
-# The work tree, as DIRECTORY_MAP.md §4 lays it out.
+# The work tree, as README.md's "Directory structure" lays it out.
 mkdir -p "$WORK"/{manifest,splits,cache/extract,indexes,supervision,parity,runs} \
          "$WORK"/models/{scorer,cond_adapter,bytecnn} \
          "$WORK"/reports/migration \
