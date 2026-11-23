@@ -14,7 +14,7 @@ YARAikiba agent, and it is the subject of a standalone paper.
 
 | | |
 |---|---|
-| Phase | P0, set-up on the new cluster. **G0** (package skeleton) built and awaiting approval: [`Sherlock/docs/gates/G0.md`](Sherlock/docs/gates/G0.md) |
+| Phase | P0, set-up on the new cluster. **G0** (package skeleton) approved 23 Nov; W1 and W3 plans in [`Sherlock/docs/plans/`](Sherlock/docs/plans/) awaiting approval. G0 note: [`Sherlock/docs/gates/G0.md`](Sherlock/docs/gates/G0.md) |
 | Dataset | Migrated and verified: 117,999 samples (95,718 malware, 22,281 goodware), every file hashed against its name, 0 mismatches. Reconciled with manifest run 278 in [`Sherlock/docs/migration/ACCEPTANCE.md`](Sherlock/docs/migration/ACCEPTANCE.md) |
 | Code | `Sherlock/sherlock/`: `core.ir`, `core.records`, `data.roots`, `data.manifest` (G0); the other sub-packages are placeholders. V1's 12 ISB modules are in `Sherlock/legacy/V1/`, kept to run V1 as an after-the-fact baseline; Sherlock is written from scratch and not influenced by V1 (only its style and lessons are kept) |
 | Tests | `pytest`: 320 passed, 12 skipped (172 legacy + 148 unit and lessons; skips: 8 span-index tests that need V1's `StaticFeatures/`, 4 `needs_data`). `pytest -m needs_data` with `ISB_DATA` set: 4 passed |
@@ -80,6 +80,7 @@ ISB-Sherlock/                      git root (github.com/xoumyax/ISB-Sherlock)
 │       ├── dataset/               DATASET_STRUCTURE.md
 │       ├── migration/             ACCEPTANCE.md
 │       ├── gates/  sessions/      gate notes (G0…G6), end-of-session notes
+│       ├── plans/                 one-page work plans (W1, W3, …) for brownie's approval
 │       └── history/               notes from the old cluster
 │
 ├── ISB-Sherlock-Data/             ISB_DATA, the dataset: read-only, NOT in git
