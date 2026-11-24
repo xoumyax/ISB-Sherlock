@@ -59,7 +59,10 @@ def compare_compile(
     for key, val in got_counts.items():
         if val != exp[key]:
             bad.append(f"{key}: expected {exp[key]}, got {val}")
-    got_err, ref_err = set(summary["compile_errors"]), set(ref["compile_errors"])
+    got_err, ref_err = (
+        set(summary["compile_errors"]),
+        set(ref.get("compile_errors") or {}),
+    )
     if got_err != ref_err:
         bad.append(
             f"compile-error ids differ: {len(got_err - ref_err)} new, "
@@ -96,6 +99,26 @@ def compare_failures(got: Mapping[str, Any]) -> list[str]:
     ]
 
 
+#: F_dev target counts every scan must have used (REPRO_PLAN §a).
+EXPECTED_TARGETS = {"held": 522, "gen": 527, "goodware": 9947}
+
+
+def compare_targets(got: Mapping[str, Any]) -> list[str]:
+    n = got.get("n_targets") or {}
+    return [
+        f"n_targets[{k}]: expected {v}, got {n.get(k)}"
+        for k, v in EXPECTED_TARGETS.items()
+        if n.get(k) != v
+    ]
+
+
+def overall(results: Mapping[str, Mapping[str, Any]]) -> str:
+    """PASS only when all three scans are present and pass; else PARTIAL or FAIL."""
+    if not results or not all(r["pass"] for r in results.values()):
+        return "FAIL"
+    return "PASS" if set(results) == set(SCANS) else "PARTIAL"
+
+
 def compare_scan(
     scan: str, got: Mapping[str, Any], ref: Mapping[str, Any], limit: int | None = None
 ) -> dict[str, Any]:
@@ -105,6 +128,7 @@ def compare_scan(
         bad.append(f"limited run (--limit {limit}) is not an acceptance run")
     bad += compare_compile(scan, got["compile"], ref)
     bad += compare_failures(got)
+    bad += compare_targets(got)
     if got.get("n_goodware") != ref.get("n_goodware"):
         bad.append(
             f"n_goodware: expected {ref.get('n_goodware')}, got {got.get('n_goodware')}"

@@ -88,7 +88,9 @@ def git_state(root: Path = GIT_ROOT) -> dict[str, Any]:
         ).stdout.strip()
 
     try:
-        exp_status = run("status", "--porcelain", "--", EXP_DIR.relative_to(root).as_posix())
+        exp_status = run(
+            "status", "--porcelain", "--", EXP_DIR.relative_to(root).as_posix()
+        )
         return {
             "commit": run("rev-parse", "HEAD"),
             "dirty": bool(run("status", "--porcelain", "--untracked-files=no")),
@@ -159,7 +161,7 @@ HARNESS = LEGACY_V1 / "YaraGen" / "Detection" / "harness.py"
 
 
 def code_hashes() -> dict[str, str]:
-    """sha256 of every code file here and of V1's harness, keyed by root-relative path."""
+    """sha256 of every code file here and of V1's harness, by root-relative path."""
     files = [
         p
         for d in CODE_DIRS

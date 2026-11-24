@@ -8,7 +8,7 @@ folder. There are no V1 outputs, splits or parity targets in Sherlock.
 
 Status (24 Nov 2026):
 
-- **Stage 0 is done.** It passes 109 of 109 checks: R1, R2, R4 and R7 were
+- **Stage 0 is done.** All 107 checks against report numbers pass (plus 1 derived and 1 internal check): R1, R2, R4 and R7 were
   recomputed from V1's stored per-unit results. See `RESULTS.md`.
 - **The Stage 1 driver is built and its dry run is clean.** All 10,996 targets
   resolve and pass the stat check. The compile counts are 84/108, 12/12 and
@@ -40,21 +40,22 @@ Stage 1 uses `-P -s` rather than `-I` because `-I` ignores `PYTHONHASHSEED`.
 | `v1_raw/` | small text members extracted from the untrusted V1 zip, with the long prefix stripped: docs, driver `.py`/`.sbatch`, logs, `run_summary.json`, `*.meta.json`, `detection.json` (under 5 MB), `exp2__m4/presence.json`, split JSONs, `artifacts/reports/`, small vault JSONs (temporal, agreement, promiscuity) | ignored |
 | `DECISIONS.md`, `RESULTS.md` | brownie's decisions; aggregate results | tracked |
 | `inputs/` | the Stage 1 inputs from the zip (prefix stripped): 23 `rules.json` (template + 22 generator tags), 22 + 1 `run_summary.json`, 12 yarGen `.yar`, the split JSONs with their `.sha256` files, and V1's three reference `detection.json` files. Hashed in `inputs/INPUTS.sha256`, read-only | ignored |
-| `tools/extract_inputs.py` | streams the allow-listed members out of the zip (`python -I`) | ignored (not `.md`) |
-| `v1repro/` | library: target resolution by sha256, unit builders, scan wrapper over `legacy/V1`'s harness, Stage 0 aggregation, the acceptance comparator | ignored (not `.md`) |
-| `drivers/` | `stage0_aggregate.py`, `stage1_rescore.py`, `acceptance.py` | ignored (not `.md`) |
-| `tests/` | pytest, synthetic files only | ignored (not `.md`) |
-| `slurm/stage1.sbatch` | the Stage 1 job (16 CPU, 192 GB, 1 h) | ignored (not `.md`) |
-| `runs/<stage>/<run_id>/` | run outputs and `run.json`; SLURM logs in `runs/stage1/`. Never written into `v1_raw/` or `inputs/` | ignored |
+| `tools/extract_inputs.py` | streams the allow-listed members out of the zip (`python -I`) | tracked |
+| `v1repro/` | library: target resolution by sha256, unit builders, scan wrapper over `legacy/V1`'s harness, Stage 0 aggregation, the acceptance comparator | tracked |
+| `drivers/` | `stage0_aggregate.py`, `stage1_rescore.py`, `acceptance.py` | tracked |
+| `tests/` | pytest, synthetic files only | tracked |
+| `slurm/stage1.sbatch` | the Stage 1 job (16 CPU, 192 GB, 2 h) | tracked |
+| `runs/<stage>/<run_id>/` | run outputs and `run.json` (status, code and input sha256, git state, yara and Python versions, SLURM job id). The SLURM log stays in `runs/stage1/slurm-<job id>.out` (DECISIONS 8); the job id in `run.json` finds it. Never written into `v1_raw/` or `inputs/` | ignored |
 
 Not extracted (they stay in the zip until Stage 2 needs them): the extraction
 cache (5.2 GB), the `candidates_*` and `supervision_table` JSONs, the stored
 `selections.json` and `presence.json`, the yarGen DBs, the classifier, and every
 `.pkl` and `.pt` file.
 
-Note on git: the root `.gitignore` tracks the `.md` files in this folder and
-ignores `v1_raw/` (including its V1 `.md` docs, which contain absolute paths)
-and every non-`.md` file.
+Note on git: the root `.gitignore` tracks the `.md`, `.py` and `.sbatch` files
+in this folder (code must hold no sample hashes and no absolute paths). It
+ignores `inputs/`, `runs/` and `v1_raw/` (including its V1 `.md` docs, which
+contain absolute paths), and every other file type.
 
 ## Safety rules
 

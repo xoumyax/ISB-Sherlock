@@ -75,11 +75,11 @@ def test_run_record_has_versions_job_id_and_experiment_status(
 
 
 def test_atomic_replace(tmp_path: Path) -> None:
-    p = tmp_path / "run.json"
+    p = tmp_path / "run" / "run.json"
     common.write_json_atomic(p, {"status": "running"})
     common.write_json_atomic(p, {"status": "complete"})
     assert json.loads(p.read_text()) == {"status": "complete"}
-    assert [x.name for x in tmp_path.iterdir()] == ["run.json"]
+    assert [x.name for x in p.parent.iterdir()] == ["run.json"]
 
 
 # ---------------------------------------------------------------- targets
@@ -295,6 +295,15 @@ def test_stage0_kinds_keep_internal_checks_out_of_the_count() -> None:
 
 
 # ---------------------------------------------------------------- extract
+ZIP_PREFIX = "some/old/home/finalexperimets/e2e-experiment/"
+
+
+def test_extract_finds_prefix(tmp_path: Path) -> None:
+    ex = load("tools/extract_inputs.py")
+    with zipfile.ZipFile(_zip_with(tmp_path, [])) as zf:
+        assert ex.find_prefix(zf) == ZIP_PREFIX
+
+
 def _zip_with(tmp: Path, extra: list[tuple[zipfile.ZipInfo, bytes]]) -> Path:
     ex = load("tools/extract_inputs.py")
     zpath = tmp / "fake.zip"
@@ -305,7 +314,7 @@ def _zip_with(tmp: Path, extra: list[tuple[zipfile.ZipInfo, bytes]]) -> Path:
                 import hashlib
 
                 data = hashlib.sha256(b"x").hexdigest().encode()
-            zf.writestr(ex.PREFIX + rel, data)
+            zf.writestr(ZIP_PREFIX + rel, data)
         for info, data in extra:
             zf.writestr(info, data)
     return zpath
@@ -313,7 +322,7 @@ def _zip_with(tmp: Path, extra: list[tuple[zipfile.ZipInfo, bytes]]) -> Path:
 
 def test_extract_refuses_traversal_member(tmp_path: Path) -> None:
     ex = load("tools/extract_inputs.py")
-    zpath = _zip_with(tmp_path, [(zipfile.ZipInfo(ex.PREFIX + "../../evil"), b"e")])
+    zpath = _zip_with(tmp_path, [(zipfile.ZipInfo(ZIP_PREFIX + "../../evil"), b"e")])
     dest = tmp_path / "dest"
     with pytest.raises(RuntimeError, match="unsafe"):
         ex.main(["--zip", str(zpath), "--dest", str(dest)])
@@ -323,7 +332,7 @@ def test_extract_refuses_traversal_member(tmp_path: Path) -> None:
 
 def test_extract_refuses_symlink_member(tmp_path: Path) -> None:
     ex = load("tools/extract_inputs.py")
-    link = zipfile.ZipInfo(ex.PREFIX + "artifacts/link")
+    link = zipfile.ZipInfo(ZIP_PREFIX + "artifacts/link")
     link.external_attr = (stat.S_IFLNK | 0o777) << 16
     zpath = _zip_with(tmp_path, [(link, b"/etc/passwd")])
     with pytest.raises(RuntimeError, match="unsafe"):
@@ -337,3 +346,12 @@ def test_extract_clean_zip(tmp_path: Path) -> None:
     assert ex.main(["--zip", str(zpath), "--dest", str(dest)]) == 0
     lines = (dest / "INPUTS.sha256").read_text().splitlines()
     assert len(lines) == len(ex.allow_list())
+
+
+def test_acceptance_reads_records_without_scans_done(tmp_path: Path) -> None:
+    mod = load("drivers/acceptance.py")
+    (tmp_path / "yargen").mkdir()
+    (tmp_path / "yargen/detection.json").write_text("{}")
+    old = {"mode": "scan", "scans": ["template", "yargen", "generators"]}
+    assert mod.scans_completed(old, tmp_path) == ["yargen"]
+    assert mod.scans_completed({**old, "scans_done": []}, tmp_path) == []

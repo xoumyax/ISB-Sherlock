@@ -45,6 +45,7 @@ def got_from(ref: dict[str, Any]) -> dict[str, Any]:
         "compile_errors": {},
     }
     got["warnings"] = {"too_many_matches": 3}
+    got["n_targets"] = dict(acceptance.EXPECTED_TARGETS)
     return got
 
 

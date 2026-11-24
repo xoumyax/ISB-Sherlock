@@ -25,7 +25,9 @@ import sys
 import zipfile
 from pathlib import Path, PurePosixPath
 
-PREFIX = "home/soumya/pipeline/LLM-Playground/finalexperimets/e2e-experiment/"
+#: The zip stores V1's tree under a long home-folder prefix ending in this; the
+#: full prefix is read from the zip, so no home path is written here.
+PREFIX_TAIL = "finalexperimets/e2e-experiment/"
 
 #: The 22 generator x prompt-style tags, as job 95929 scored them (smoke excluded).
 GENERATOR_TAGS = [
@@ -50,7 +52,7 @@ CHUNK = 1 << 20
 
 
 def allow_list() -> list[str]:
-    """Every member to extract, relative to ``PREFIX``."""
+    """Every member to extract, relative to the zip prefix."""
     members = [
         "artifacts/exp2__m4/rules.json",
         "artifacts/exp2__m4/run_summary.json",
@@ -90,13 +92,27 @@ def unsafe_reason(info: zipfile.ZipInfo) -> str | None:
     return None
 
 
-def check_zip(zf: zipfile.ZipFile, wanted: list[str]) -> dict[str, zipfile.ZipInfo]:
+def find_prefix(zf: zipfile.ZipFile) -> str:
+    """The one member-name prefix ending in ``PREFIX_TAIL``; else refuse."""
+    found = {
+        i.filename[: i.filename.index(PREFIX_TAIL) + len(PREFIX_TAIL)]
+        for i in zf.infolist()
+        if PREFIX_TAIL in i.filename
+    }
+    if len(found) != 1:
+        raise RuntimeError(f"expected one V1 prefix in the zip, found {len(found)}")
+    return found.pop()
+
+
+def check_zip(
+    zf: zipfile.ZipFile, wanted: list[str], prefix: str
+) -> dict[str, zipfile.ZipInfo]:
     """Check every member; return the wanted ones. Raise on any problem."""
     bad = {i.filename: r for i in zf.infolist() if (r := unsafe_reason(i))}
     by_name = {i.filename: i for i in zf.infolist()}
     picked: dict[str, zipfile.ZipInfo] = {}
     for rel in wanted:
-        full = PREFIX + rel
+        full = prefix + rel
         if full in bad:
             raise RuntimeError(f"unsafe member {rel!r}: {bad[full]}")
         if full not in by_name:
@@ -155,7 +171,7 @@ def main(argv: list[str] | None = None) -> int:
     dest.mkdir(parents=True, exist_ok=True)
     wanted = allow_list()
     with zipfile.ZipFile(args.zip) as zf:
-        picked = check_zip(zf, wanted)
+        picked = check_zip(zf, wanted, find_prefix(zf))
         hashes = {
             rel: extract_one(zf, info, safe_target(dest, rel))
             for rel, info in picked.items()

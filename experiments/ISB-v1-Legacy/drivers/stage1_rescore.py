@@ -23,6 +23,7 @@ import argparse
 import gc
 import sys
 import time
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -123,7 +124,12 @@ def dry_run(scans: list[str], out: Path) -> dict[str, Any]:
     return result
 
 
-def full_run(scans: list[str], tgts: dict[str, list], out: Path) -> dict[str, Any]:
+def full_run(
+    scans: list[str],
+    tgts: dict[str, list],
+    out: Path,
+    on_scan_done: Callable[[str, dict[str, Any]], None] | None = None,
+) -> dict[str, Any]:
     done: dict[str, Any] = {}
     for name in scans:
         log(f"--- scan {name}")
@@ -139,6 +145,8 @@ def full_run(scans: list[str], tgts: dict[str, list], out: Path) -> dict[str, An
             "seconds": round(time.time() - t0, 1),
         }
         log(f"{name}: {done[name]}")
+        if on_scan_done:
+            on_scan_done(name, done[name])
         del us, res
         gc.collect()
     return done
@@ -159,45 +167,78 @@ def parse_args(argv: list[str] | None) -> argparse.Namespace:
     return ap.parse_args(argv)
 
 
+def hash_seed_ok() -> bool:
+    return sys.flags.hash_randomization == 0
+
+
+class RunRecord:
+    """run.json, rewritten atomically at start, after each scan, and at the end."""
+
+    def __init__(self, out: Path, run_id: str, fields: dict[str, Any]) -> None:
+        self.path = out / "run.json"
+        self.run_id = run_id
+        self.started = common.utc_now()
+        self.inputs: dict[str, str] = {}
+        self.fields = {"status": "running", "scans_done": [], **fields}
+        self.save()
+
+    def update(self, **fields: Any) -> None:
+        self.fields.update(fields)
+        self.save()
+
+    def save(self) -> None:
+        rec = common.run_record(
+            "stage1", self.run_id, self.started, self.inputs, self.fields
+        )
+        common.write_json_atomic(self.path, rec)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    if sys.flags.hash_randomization:
+    if not hash_seed_ok():
         raise SystemExit(
             "PYTHONHASHSEED=0 is required (and python -I ignores it; use -P -s)"
         )
     run_id = args.run_id or common.new_run_id()
     out = common.check_output_dir(args.out_dir or common.RUNS_DIR / "stage1" / run_id)
-    started = common.utc_now()
     scans = list(SCAN_ORDER) if args.scan == "all" else [args.scan]
-
-    hashes = common.verified_inputs(input_rels(scans))
-    tgts, cov = load_targets(args.limit)
-    log(f"targets {cov['selected']}; stat {cov['stat']}")
     out.mkdir(parents=True, exist_ok=True)
-    if args.dry_run:
-        body = {"dry_run": dry_run(scans, out), "coverage": cov}
-    else:
-        if not coverage_ok(cov):
-            raise SystemExit("some targets fail the stat check; refusing to scan")
-        body = {"scan_results": full_run(scans, tgts, out), "coverage": cov}
-    common.write_json(
-        out / "run.json",
-        common.run_record(
-            "stage1",
-            run_id,
-            started,
-            hashes,
-            {
-                "mode": "dry-run" if args.dry_run else "scan",
-                "scans": scans,
-                "limit": args.limit,
-                "split": "F_dev",
-                "dataset_root": "env:ISB_DATA",
-                "out_dir": common.rel_to_root(out),
-                **body,
-            },
-        ),
+    rec = RunRecord(
+        out,
+        run_id,
+        {
+            "mode": "dry-run" if args.dry_run else "scan",
+            "scans": scans,
+            "limit": args.limit,
+            "split": "F_dev",
+            "dataset_root": "env:ISB_DATA",
+            "out_dir": common.rel_to_root(out),
+        },
     )
+    try:
+        rec.inputs = common.verified_inputs(input_rels(scans))
+        tgts, cov = load_targets(args.limit)
+        log(f"targets {cov['selected']}; stat {cov['stat']}")
+        rec.update(coverage=cov)
+        if args.dry_run:
+            rec.update(dry_run=dry_run(scans, out))
+        else:
+            if not coverage_ok(cov):
+                raise SystemExit("some targets fail the stat check; refusing to scan")
+            results: dict[str, Any] = {}
+
+            def done(name: str, summary: dict[str, Any]) -> None:
+                results[name] = summary
+                rec.update(
+                    scans_done=[*rec.fields["scans_done"], name],
+                    scan_results=dict(results),
+                )
+
+            full_run(scans, tgts, out, on_scan_done=done)
+    except BaseException as exc:
+        rec.update(status="failed", error=type(exc).__name__, message=str(exc)[:300])
+        raise
+    rec.update(status="complete")
     log(f"run {run_id} -> {common.rel_to_root(out)}")
     return 0
 

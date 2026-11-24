@@ -59,11 +59,12 @@ def main(argv: list[str] | None = None) -> int:
     summ = results["summary"]
     for path, c in stage0.iter_checks(results):
         flag = "PASS" if c["pass"] else "FAIL"
-        print(f"{flag}  {path:<62} expected {c['expected']:>9}  got {c['got']:>9}")
-    print(
-        f"\n{summ['n_pass']}/{summ['n_checks']} checks pass; "
-        f"run {run_id} -> {common.rel_to_root(out)}"
-    )
+        tag = "" if c["kind"] == "report" else f"  [{c['kind']}]"
+        print(f"{flag}  {path:<62} expected {c['expected']:>9}  got {c['got']:>9}{tag}")
+    for kind in stage0.KINDS:
+        k = summ[kind]
+        print(f"{kind:>9}: {k['n_pass']}/{k['n_checks']} pass")
+    print(f"run {run_id} -> {common.rel_to_root(out)}")
     return 0 if not summ["failed"] else 1
 
 

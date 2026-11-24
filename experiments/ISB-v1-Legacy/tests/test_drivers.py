@@ -61,7 +61,16 @@ def fake_targets(tmp: Path) -> dict[str, list[TargetSpec]]:
     return {"held": held, "gen": gen, "goodware": good}
 
 
-def test_full_run_then_acceptance(tmp_path: Path, fake_inputs: Path) -> None:
+@pytest.fixture
+def fake_counts(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        acceptance, "EXPECTED_TARGETS", {"held": 6, "gen": 1, "goodware": 2}
+    )
+
+
+def test_full_run_then_acceptance(
+    tmp_path: Path, fake_inputs: Path, fake_counts: None
+) -> None:
     stage1 = load_driver("stage1_rescore")
     out = tmp_path / "run"
     done = stage1.full_run(["yargen"], fake_targets(tmp_path), out)
@@ -78,12 +87,14 @@ def test_full_run_then_acceptance(tmp_path: Path, fake_inputs: Path) -> None:
         f"{common.sha256_file(ref)}  {acceptance.SCANS['yargen']['ref']}\n"
     )
     (out / "run.json").write_text(
-        json.dumps({"mode": "scan", "scans": ["yargen"], "limit": None})
+        json.dumps({"mode": "scan", "scans_done": ["yargen"], "limit": None})
     )
     accept = load_driver("acceptance")
-    assert accept.main(["--run-dir", str(out)]) == 0
-    assert accept.main(["--run-dir", str(out)]) == 0  # rerun overwrites
-    assert json.loads((out / "acceptance.json").read_text())["pass"] is True
+    # yarGen alone passes, but one scan of three is PARTIAL, never PASS.
+    assert accept.main(["--run-dir", str(out)]) == 1
+    verdict = json.loads((out / "acceptance.json").read_text())
+    assert verdict["status"] == "PARTIAL" and verdict["scans"]["yargen"]["pass"]
+    assert verdict["scans_missing"] == ["template", "generators"]
 
 
 def test_acceptance_rejects_tampered_reference(
@@ -98,7 +109,7 @@ def test_acceptance_rejects_tampered_reference(
         f"{'0' * 64}  {acceptance.SCANS['yargen']['ref']}\n"
     )
     (out / "run.json").write_text(
-        json.dumps({"mode": "scan", "scans": ["yargen"], "limit": None})
+        json.dumps({"mode": "scan", "scans_done": ["yargen"], "limit": None})
     )
     with pytest.raises(RuntimeError):
         load_driver("acceptance").main(["--run-dir", str(out)])

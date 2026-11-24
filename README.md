@@ -113,9 +113,12 @@ ISB-Sherlock/                      git root (github.com/xoumyax/ISB-Sherlock)
 │   └── reports/                   machine-written reports; reports/migration/ holds the
 │                                  verify log, archive checksums and migration records
 ├── ISB-Sherlock-Scratch/          ISB_SCRATCH, temporary; safe to wipe: NOT in git
-└── ISB-Sherlock-V1/ (+ .zip)      intake of V1 artifacts from the old cluster (splits,
-                                   exp2 outputs, indexes, code): untrusted, read-only;
-                                   used only to run V1 as a baseline: NOT in git
+├── ISB-V1-RAW.zip                 V1's artifacts from the old cluster (splits, exp2
+│                                  outputs, indexes, code): untrusted, read-only, verified;
+│                                  used only for the V1 baseline: NOT in git
+└── experiments/                   baselines run beside Sherlock, never read by its pipeline
+    └── ISB-v1-Legacy/             V1 reproduction: docs and code tracked; inputs/, runs/,
+                                   v1_raw/ NOT in git (see its README.md)
 ```
 
 The roots can live anywhere (another filesystem, a scratch volume); `beside the

@@ -3,9 +3,15 @@
 Aggregate numbers only. Run records are in `runs/` (gitignored). All numbers
 are F_dev, oracle-label condition, the same as V1's report.
 
-## Stage 0: re-aggregation of V1's stored results (run `20261124T033112Z`)
+## Stage 0: re-aggregation of V1's stored results (run `20261124T035443Z`)
 
-**109 of 109 checks pass.** Every number was recomputed from the per-unit
+**All 107 checks against numbers printed in the report pass.** Two more
+checks are not counted as reproduced. One is derived from a report number:
+about 146 rules per family, which comes from the reported total. The other is
+an internal consistency check that is not from the report: the lfm2 pooled
+value of 209.90, which REPRO_PLAN took from this same computation. Both pass.
+
+Every number was recomputed from the per-unit
 integers in V1's stored `detection.json` files (`tp`, `n_held_family`,
 `benign_match`, `benign_by_source`, `cross_match`). We didn't copy V1's stored
 `grid`; we used it only as a cross-check, and it agrees for all 14 ladder rows.
@@ -48,7 +54,7 @@ largest has 412,124 strings. All four numbers pass.
 
 The report text also passes:
 
-- 1,755 yarGen rules across 12 sets, which is about 146 per family;
+- 1,755 yarGen rules across 12 sets (about 146 per family is derived from this total, not counted);
 - 2.13 times the TPR of `union__prevalence_k`;
 - 399 times its FP/1k;
 - 2,164 times the FP/1k of `classifier__prevalence_k`.
@@ -60,8 +66,9 @@ All rows are planformat except the template, which V1 ran as describer (tag
 families. **FP/1k (V1)** is V1's definition, the mean of the per-cell means
 over the (source x arm) cells that compiled; decision 4 fixes it as the
 acceptance number. The pooled per-unit mean and the raw benign-hit count sit
-beside it for information. Only lfm2's pooled value (209.90) is a checked
-number.
+beside it for information. lfm2's pooled value (209.90) is checked only as
+internal consistency: the plan's figure came from this same computation, not
+from the report.
 
 | Generator | TPR | FP/1k (V1) | Cmp. err | Result | FP/1k pooled | Benign hits |
 |---|---|---|---|---|---|---|
@@ -69,7 +76,7 @@ number.
 | ministral | 0.234 | 0.24 | 7 | pass | 0.23 | 147 |
 | bart_scooper | 0.231 | 0.20 | 5 | pass | 0.20 | 132 |
 | t5gemma_humanized | 0.227 | 0.23 | 0 | pass | 0.23 | 167 |
-| lfm2_consistency | 0.430 | 193.27 | 10 | pass | 209.90 (pass) | 129,446 |
+| lfm2_consistency | 0.430 | 193.27 | 10 | pass | 209.90 (internal check) | 129,446 |
 | bart | 0.239 | 0.31 | 1 | pass | 0.32 | 223 |
 | bart_taskmix_base | 0.225 | 0.58 | 2 | pass | 0.53 | 366 |
 | codet5p_consistency | 0.208 | 0.26 | 3 | pass | 0.26 | 178 |
@@ -86,7 +93,7 @@ plan's Stage 0 but wasn't built in this round.
 
 ## Stage 1: re-score with V1's harness (not yet run)
 
-On the login node, the dry run (`20261124T034042Z`) ran a stat-only target
+On the login node, the dry run (`20261124T035443Z`) ran a stat-only target
 check and compiled the rules. It scanned nothing.
 
 | Corpus | Selected from V1's split | Resolved through the manifest | Stat ok, size equals manifest |
