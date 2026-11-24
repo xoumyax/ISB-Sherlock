@@ -12,6 +12,21 @@
 # used only to run V1 as a baseline; Sherlock never reads it
 /ISB-Sherlock-V1/
 
+# Experiment outputs hold sample hashes and paths: only the docs (*.md) are tracked.
+# Docs must carry aggregate numbers only, never sample hashes.
+/experiments/**
+!/experiments/**/
+!/experiments/**/*.md
+# Code is tracked too (brownie, 24 Nov): drivers, library, tests, tools, sbatch.
+# It must hold no sample hashes and no absolute paths.
+!/experiments/**/*.py
+!/experiments/**/*.sbatch
+# Data never: extracted inputs, run outputs, raw V1 copies
+/experiments/**/inputs/
+/experiments/**/runs/
+# Raw copies of V1 files carry old absolute paths: never tracked, docs included
+/experiments/**/v1_raw/
+
 # Belt and braces, anywhere in the tree: samples, archives, digests, databases
 *.bin
 *.zip
