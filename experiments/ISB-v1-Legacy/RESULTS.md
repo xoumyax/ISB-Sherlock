@@ -91,7 +91,28 @@ because one cell lost every unit to compile errors.
 R3, R5, R6, R8, R9 and R10 aren't part of Stage 0 here. R8 (fidelity) is in the
 plan's Stage 0 but wasn't built in this round.
 
-## Stage 1: re-score with V1's harness (not yet run)
+## Stage 1: re-score with V1's harness: PASS
+
+Run `20261124T040416Z-j58350` (SLURM job 58350, 21 min, 3.3 GB peak; commit
+9653dd4, clean tree; yara-python 4.5.4). V1's stored rules were re-scanned
+statically over the same 10,996 targets, in three separate scans, and compared
+with V1's stored per-unit results as exact integers (tp, cross-family, benign,
+gen, held-family size, benign hits per goodware source; unit sets and
+compile-error ids both ways).
+
+| Scan | Units scanned | Mismatches | Scan failures | Too-many-matches warnings | Seconds |
+|---|---|---|---|---|---|
+| template | 84 | 0 | 0 | 0 | 426 |
+| yarGen | 12 | 0 | 0 | 12 | 403 |
+| generators | 1,734 | 0 | 0 | 148 | 426 |
+
+So V1's reported detection numbers (R1 arm ladder, R4 yarGen, R7 generator grid)
+reproduce from the samples on this cluster, not only from V1's stored files.
+The warnings are counted, never raised, as in V1. An earlier job (58349) was
+cancelled by brownie and restarted after the provenance fixes; its partial
+outputs are kept but not used.
+
+### Stage 1 dry run (before the job)
 
 On the login node, the dry run (`20261124T035443Z`) ran a stat-only target
 check and compiled the rules. It scanned nothing.
@@ -108,4 +129,4 @@ check and compiled the rules. It scanned nothing.
 | yarGen | 12 | 12 | 0 | 0 | yes |
 | generators | 1,956 | 1,734 | 24 | 222 | yes |
 
-The scan itself is a SLURM job for brownie (`slurm/stage1.sbatch`).
+

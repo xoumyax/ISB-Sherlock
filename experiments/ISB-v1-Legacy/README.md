@@ -10,13 +10,10 @@ Status (24 Nov 2026):
 
 - **Stage 0 is done.** All 107 checks against report numbers pass (plus 1 derived and 1 internal check): R1, R2, R4 and R7 were
   recomputed from V1's stored per-unit results. See `RESULTS.md`.
-- **The Stage 1 driver is built and its dry run is clean.** All 10,996 targets
-  resolve and pass the stat check. The compile counts are 84/108, 12/12 and
-  1,734/1,956, and the compile-error ids equal V1's.
-- **Stage 1 has not run yet.** The scan is waiting for brownie to submit
-  `slurm/stage1.sbatch` from the git root.
-- Stage 2 and later stages haven't started. The decisions are in
-  `DECISIONS.md`.
+- **Stage 1 passed** (job 58350, 21 min). V1's stored rules, re-scanned over the
+  same 10,996 targets, give 0 mismatches against V1's per-unit integers in all
+  three scans (template 84, yarGen 12, generators 1,734 units). See `RESULTS.md`.
+- **Next:** Stage 2 (regenerate the rules) and Stage 3 (yarGen in the `yargen` env).
 
 How to run each step, from the git root:
 
