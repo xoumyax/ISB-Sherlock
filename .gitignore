@@ -23,6 +23,13 @@
 *.sqlite-shm
 *.lst
 
+# Model weights and download caches: artifacts, not code (brownie, 24 Nov)
+Sherlock/legacy/StaticFeatureExtractor/models/
+*.model
+*.pt
+*.safetensors
+.cache/
+
 # Cluster-specific roots
 **/config/roots.yaml
 

@@ -17,7 +17,7 @@ YARAikiba agent, and it is the subject of a standalone paper.
 | Phase | P0, set-up on the new cluster. **G0** (package skeleton) approved 23 Nov; W1 and W3 plans in [`Sherlock/docs/plans/`](Sherlock/docs/plans/) awaiting approval. G0 note: [`Sherlock/docs/gates/G0.md`](Sherlock/docs/gates/G0.md) |
 | Dataset | Migrated and verified: 117,999 samples (95,718 malware, 22,281 goodware), every file hashed against its name, 0 mismatches. Reconciled with manifest run 278 in [`Sherlock/docs/migration/ACCEPTANCE.md`](Sherlock/docs/migration/ACCEPTANCE.md) |
 | Code | `Sherlock/sherlock/`: `core.ir`, `core.records`, `data.roots`, `data.manifest` (G0); the other sub-packages are placeholders. V1's 12 ISB modules are in `Sherlock/legacy/V1/`, kept to run V1 as an after-the-fact baseline; Sherlock is written from scratch and not influenced by V1 (only its style and lessons are kept) |
-| Tests | `pytest`: 320 passed, 12 skipped (172 legacy + 148 unit and lessons; skips: 8 span-index tests that need V1's `StaticFeatures/`, 4 `needs_data`). `pytest -m needs_data` with `ISB_DATA` set: 4 passed |
+| Tests | `pytest`: 328 passed, 4 skipped (180 legacy + 148 unit and lessons; skips: 4 `needs_data`). `pytest -m needs_data` with `ISB_DATA` set: 4 passed |
 | Enrichment | W1–W9 not started (TLSH/sdhash collapse, alias review, source dates, rule hits, goodware, packers, labels) |
 
 The plan (phases, gates, decisions, risks) is a private dashboard. Its latest export
@@ -183,7 +183,7 @@ lacks: the three roots (the dataset root stays empty for `download.sh`), the wor
 tree (`manifest/`, `enrich/W1…W9/`, `splits/`, `cache/extract/`, `indexes/`,
 `supervision/`, `models/`, `parity/`, `runs/`, `reports/`) and the empty repo
 folders (`docs/gates/`, `docs/sessions/`, `tests/unit|lessons|integration|parity/`).
-Then it runs `pytest -m legacy` (expect 172 passed, 8 skipped). Re-running is safe:
+Then it runs `pytest -m legacy` (expect 180 passed). Re-running is safe:
 with no arguments it reuses the roots in `roots.yaml`, and `mkdir -p` never touches
 what exists. A root inside the git tree that `.gitignore` doesn't cover is refused. There are no default paths:
 pass the roots or opt in to `--beside-repo`. Other flags: `--env-only`,
@@ -235,7 +235,7 @@ Keep the archives until the dataset has a backup.
 ```bash
 conda activate sherlock
 cd Sherlock
-pytest -m legacy                                   # V1's suites: 172 passed, 8 skipped
+pytest -m legacy                                   # V1's suites: 180 passed
 ISB_DATA=/big/ISB-Sherlock-Data pytest -m needs_data   # read-only dataset tests (from G0)
 python -I scripts/migration/verify_names.py "$ISB_DATA" <list.lst>   # spot-check hashes
 ```
