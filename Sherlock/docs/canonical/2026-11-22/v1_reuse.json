@@ -1,0 +1,86 @@
+[
+ {
+  "id": "code",
+  "artifact": "ISB/ (V1-Legacy, 12 modules)",
+  "contents": "3,474 lines: IR, grammar, stoplist, pooling, goodware oracle, supervision, salience, mining, budget, conditions, arms",
+  "verdict": "Reference",
+  "action": "Style source and G2 parity oracle; its lessons become named tests (D11)"
+ },
+ {
+  "id": "malware_split",
+  "artifact": "splits/malware_split.json",
+  "contents": "38 families, 6,806 samples, family→split, gen/held",
+  "verdict": "Partly",
+  "action": "Keep the family→split assignment (EXTEND, D2), re-checked against W1 clusters and W2 decisions; drop path fields; labels are Tier X"
+ },
+ {
+  "id": "goodware_split",
+  "artifact": "splits/goodware_split.json",
+  "contents": "20,567 files in G_stats/G_eval",
+  "verdict": "Rebuild",
+  "action": "Re-split from the manifest by vendor, without Softonic"
+ },
+ {
+  "id": "cache",
+  "artifact": "cache/extract/ (4.9 GB)",
+  "contents": "Extraction for 6,806 labelled, 60,190 vault, 10,620 G_stats",
+  "verdict": "Partly",
+  "action": "Reuse by sha256; extract Run V (11,076), new goodware and .NET heaps"
+ },
+ {
+  "id": "df",
+  "artifact": "goodware/goodware_df.pkl",
+  "contents": "868,903 values over 3,595 docs",
+  "verdict": "Rebuild",
+  "action": "Rebuild after G1: G_stats only, no Softonic, capped per source"
+ },
+ {
+  "id": "spans",
+  "artifact": "isb__m4/goodware_spans.json",
+  "contents": "5,849 spans",
+  "verdict": "Rebuild",
+  "action": "Rebuild after G1 from the new candidate set"
+ },
+ {
+  "id": "bytecnn",
+  "artifact": "classifier/…/best.pt",
+  "contents": "Byte-CNN, binary + family heads (AUC 0.941)",
+  "verdict": "Partly",
+  "action": "Binary head as-is; retrain the family head on the new F_train"
+ },
+ {
+  "id": "analyst_terms",
+  "artifact": "isb__m4/analyst_terms.json",
+  "contents": "287,372 terms from 305,697 rules, names stripped",
+  "verdict": "Reference",
+  "action": "V1 baseline only; named-rule sources replace it"
+ },
+ {
+  "id": "supervision",
+  "artifact": "isb__m4/supervision_table.json + salience",
+  "contents": "511,663 rows, 3,497 positive; LightGBM, 12 features",
+  "verdict": "Reference",
+  "action": "Compare against; do not reuse"
+ },
+ {
+  "id": "yargen",
+  "artifact": "yargen/",
+  "contents": "yarGen baseline outputs",
+  "verdict": "Rebuild",
+  "action": "Symlinks are dead; re-run with the G_stats DB and the stock DB"
+ },
+ {
+  "id": "drivers",
+  "artifact": "run_isb.py, run_exp2.py, phase0_corpus_splits.py …",
+  "contents": "V1 drivers",
+  "verdict": "Reference",
+  "action": "Not ported: Sherlock's cli/ replaces them with config roots (D11)"
+ },
+ {
+  "id": "vault",
+  "artifact": "vault/",
+  "contents": "Vault index, promiscuity and temporal studies",
+  "verdict": "Reference",
+  "action": "Background FP and promiscuity only"
+ }
+]

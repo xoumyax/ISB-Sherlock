@@ -1,0 +1,15 @@
+# Copy to config/roots.yaml (gitignored) and fill in absolute paths for this
+# cluster. Every Sherlock path derives from these roots; no other file in the
+# repo holds an absolute path. Environment variables override these keys:
+#   ISB_DATA, ISB_ZIPS, ISB_WORK, ISB_SCRATCH
+# There are no defaults: a missing root is an error, never a guess.
+
+dataset_root: /ABSOLUTE/PATH/ISB-Sherlock-Data           # ISB_DATA, read-only after verification
+zips_root: /ABSOLUTE/PATH/ISB-Sherlock-Dataset-zips      # ISB_ZIPS, optional: only while the archives are on disk
+work_root: /ABSOLUTE/PATH/ISB-Sherlock-Work              # ISB_WORK, every derived artifact
+scratch_root: /ABSOLUTE/PATH/scratch/sherlock            # ISB_SCRATCH, temporary; safe to wipe
+
+tools:                                                   # relative paths are relative to Sherlock/
+  sdhash: third_party/sdhash/jc_sdhash/sdhash
+  diec: null                                             # Detect It Easy CLI, needed for W8
+  upx: null                                              # UPX, needed for W8 (static unpacking only)

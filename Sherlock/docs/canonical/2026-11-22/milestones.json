@@ -1,0 +1,5 @@
+[
+  {"id": "agent_ndss", "milestone": "Agent paper, NDSS 2028 (est.)", "date": "2027-05-05", "kind": "Competing", "basis": "Agent roadmap; NDSS 2027's summer cycle closed 6 May 2026"},
+  {"id": "sp28_c1", "milestone": "S&P 2028 Cycle 1 (est.)", "date": "2027-06-03", "kind": "Target", "basis": "S&P 2026's Cycle 1 closed 5 Jun 2025"},
+  {"id": "sec28_c1", "milestone": "USENIX Sec '28 Cycle 1 (est.)", "date": "2027-08-24", "kind": "Fallback", "basis": "USENIX Security '27 Cycle 1 closed 25 Aug 2026"}
+]

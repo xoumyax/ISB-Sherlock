@@ -1,0 +1,4 @@
+[
+  {"id": "malware", "pool": "Malware", "unique_files": 95701, "executables": 78054, "pe": 69780, "dotnet": 8259, "elf": 15, "non_exe": 17647, "packed_pct": 27.2},
+  {"id": "goodware", "pool": "Goodware", "unique_files": 22243, "executables": 22234, "pe": 20189, "dotnet": 575, "elf": 1470, "non_exe": 9, "packed_pct": 45.1}
+]

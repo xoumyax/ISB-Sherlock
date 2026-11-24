@@ -1,0 +1,4 @@
+[
+  {"id": "pe", "format": "PE (native)", "malware_exes": 69780, "usable_goodware": 19318, "gap_1to1": 50445},
+  {"id": "dotnet", "format": ".NET", "malware_exes": 8259, "usable_goodware": 569, "gap_1to1": 7690}
+]

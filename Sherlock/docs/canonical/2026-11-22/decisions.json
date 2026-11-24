@@ -1,0 +1,98 @@
+[
+ {
+  "id": "D11",
+  "decision": "Sherlock from scratch",
+  "recommendation": "Rewrite in V1's style. V1 stays runnable as the parity oracle for G2 and as the record of every lesson it paid for",
+  "unblocks": "P0, P3",
+  "when": "22 Nov",
+  "status": "Decided"
+ },
+ {
+  "id": "D1",
+  "decision": "Label regime for training vs evaluation",
+  "recommendation": "Hybrid. Train and tune on Tier X; report Tier X headlines as AV/YARA-derived upper bounds; every claim must hold on the confirmed subset. Don't wait for labels to start the build",
+  "unblocks": "P1 splits; E1, E2, E6",
+  "when": "This week",
+  "status": "Recommended"
+ },
+ {
+  "id": "D3",
+  "decision": "MOTIF archive and the 33-file acquisition (A2)",
+  "recommendation": "Approve both: the cheapest Tier A gain. Re-arm or drop pe.machine and pe.subsystem for the disarmed files",
+  "unblocks": "W9; E6 confirmed subset",
+  "when": "This week",
+  "status": "Recommended"
+ },
+ {
+  "id": "D4",
+  "decision": "Download cap and Windows image source (A1, A7)",
+  "recommendation": "Raise to about 100 GiB, budgeted per source; Windows 10/11 from the university portal, the 24H2 line and Server 2025 from the Evaluation Center",
+  "unblocks": "W5–W7",
+  "when": "This week",
+  "status": "Recommended"
+ },
+ {
+  "id": "D7",
+  "decision": "Which environment Sherlock runs in",
+  "recommendation": "Clone yaraikiba into a sherlock env; add tlsh, python-magic and dnfile",
+  "unblocks": "P0, P3",
+  "when": "This week",
+  "status": "Recommended"
+ },
+ {
+  "id": "D8",
+  "decision": "Linux/ELF scope (A8)",
+  "recommendation": "ELF out of the paper (15 malware files). ELF goodware is a separate pool, out of FP denominators; Linux-shipped PE and .NET files join the Windows pools",
+  "unblocks": "W6",
+  "when": "By G0",
+  "status": "Recommended"
+ },
+ {
+  "id": "D2",
+  "decision": "Keep V1's 38-family assignment or re-split",
+  "recommendation": "EXTEND: freeze V1's 38 assignments so its F_test stays unseen; assign the other families by median source date, 60/16/24, over alias groups after W1–W2",
+  "unblocks": "G1 splits; G2 parity",
+  "when": "By G0",
+  "status": "Recommended"
+ },
+ {
+  "id": "D6",
+  "decision": "Sherlock data layout",
+  "recommendation": "sha256-keyed and manifest-driven; no paths in artifacts; one run folder per experiment and arm (layout in the Code section)",
+  "unblocks": "P0, P3",
+  "when": "By G0",
+  "status": "Recommended"
+ },
+ {
+  "id": "D9",
+  "decision": ".NET handling",
+  "recommendation": "A CLR metadata extractor (#Strings, #US, type and member refs, assembly info); report .NET separately",
+  "unblocks": "P3; E3, E6",
+  "when": "By G0",
+  "status": "Recommended"
+ },
+ {
+  "id": "D5",
+  "decision": "Alias components and pool conflicts (W2)",
+  "recommendation": "Do the 28 high-impact components and every W1 conflict before the freeze; keep the 17 pool conflicts excluded unless signer evidence is unambiguous",
+  "unblocks": "G1 alias groups",
+  "when": "Before G1",
+  "status": "Recommended"
+ },
+ {
+  "id": "D10",
+  "decision": "HEX_SPAN (byte-CNN) arm",
+  "recommendation": "Keep it: V1's classifier spans beat static strings on TPR and FP. Binary head now; retrain both heads on the frozen F_train in P3",
+  "unblocks": "P3; E4",
+  "when": "Before G1",
+  "status": "Recommended"
+ },
+ {
+  "id": "D12",
+  "decision": "Selection objective",
+  "recommendation": "Choose the set of candidates that maximizes expected held coverage under the string cap, using the scorer's persistence probabilities; keep type_cover and prevalence_k as arms and pick at G3 on F_dev",
+  "unblocks": "P4; E2, E10",
+  "when": "Before P4",
+  "status": "Proposed"
+ }
+]

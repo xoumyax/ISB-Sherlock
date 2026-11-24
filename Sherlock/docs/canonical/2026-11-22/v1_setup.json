@@ -1,0 +1,3 @@
+[
+  {"id": "v1", "dev_families": 6, "held_samples": 522, "g_eval_files": 9947, "scorer_pr_auc": 0.171, "prevalence_baseline": 0.038, "f_train_families": 23, "f_dev_families": 6, "f_test_families": 9, "labelled_samples": 6806}
+]

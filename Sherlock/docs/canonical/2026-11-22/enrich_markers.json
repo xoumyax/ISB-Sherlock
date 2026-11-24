@@ -1,0 +1,30 @@
+[
+ {
+  "id": "m_req",
+  "marker": "Label requests sent",
+  "date": "2026-11-24",
+  "kind": "Task",
+  "basis": "VirusTotal academic, Malpedia and BODMAS/EMBER2024 (A4)"
+ },
+ {
+  "id": "m_tg",
+  "marker": "Thanksgiving (US)",
+  "date": "2026-11-26",
+  "kind": "Holiday",
+  "basis": "Unattended compute (W1, W3, W4) fills this week"
+ },
+ {
+  "id": "m_g1",
+  "marker": "G1 split freeze",
+  "date": "2026-12-13",
+  "kind": "Target",
+  "basis": "Freeze when every gating stop criterion passes"
+ },
+ {
+  "id": "m_g1b",
+  "marker": "Fallback freeze",
+  "date": "2026-12-20",
+  "kind": "Fallback",
+  "basis": "If a gating row is short, freeze a week later rather than lower a target; build phases shift by the same week"
+ }
+]

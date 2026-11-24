@@ -1,0 +1,10 @@
+[
+  {"id": "union_pk", "system": "ISB V1", "arm": "union · prevalence_k", "tpr": 0.351, "fp_per_1k": 0.64},
+  {"id": "clf_pk", "system": "ISB V1", "arm": "classifier · prevalence_k", "tpr": 0.337, "fp_per_1k": 0.12},
+  {"id": "clf_learned", "system": "ISB V1", "arm": "classifier · learned", "tpr": 0.303, "fp_per_1k": 0.15},
+  {"id": "clf_analyst", "system": "ISB V1", "arm": "classifier · analyst", "tpr": 0.299, "fp_per_1k": 0.07},
+  {"id": "static_pk", "system": "ISB V1", "arm": "static · prevalence_k", "tpr": 0.249, "fp_per_1k": 0.64},
+  {"id": "static_learned", "system": "ISB V1", "arm": "static · learned", "tpr": 0.138, "fp_per_1k": 0.17},
+  {"id": "yargen_ref", "system": "yarGen", "arm": "yarGen 0.25.0, G_stats DB", "tpr": 0.634, "fp_per_1k": 107.3},
+  {"id": "yargen_stock", "system": "yarGen", "arm": "yarGen, stock DB", "tpr": 0.747, "fp_per_1k": 253.8}
+]

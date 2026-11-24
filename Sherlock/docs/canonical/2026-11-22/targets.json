@@ -1,0 +1,4 @@
+[
+  {"id": "v0", "target": "v0", "min_samples": 10, "families": 80, "tier_a_families": 40},
+  {"id": "v1", "target": "v1", "min_samples": 20, "families": 300, "tier_a_families": 100}
+]

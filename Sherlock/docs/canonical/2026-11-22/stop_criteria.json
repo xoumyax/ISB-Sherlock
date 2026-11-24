@@ -1,0 +1,134 @@
+[
+ {
+  "id": "S1",
+  "metric": "Tier X families with ≥10 independent samples (TLSH-30 clusters)",
+  "today": "315 before collapse, an upper bound",
+  "target": "≥80 (v0)",
+  "gates": "Yes",
+  "from": "W1",
+  "status": "Open",
+  "today_n": null,
+  "target_n": 80
+ },
+ {
+  "id": "S2",
+  "metric": "Families with ≥20 independent samples",
+  "today": "315 before collapse",
+  "target": "Reported; v1 targets 300",
+  "gates": "No",
+  "from": "W1",
+  "status": "Open",
+  "today_n": null,
+  "target_n": null
+ },
+ {
+  "id": "S3",
+  "metric": "High-impact alias components adjudicated",
+  "today": "0 of 28",
+  "target": "28 of 28, plus every W1 conflict",
+  "gates": "Yes",
+  "from": "W2",
+  "status": "Open",
+  "today_n": 0,
+  "target_n": 28
+ },
+ {
+  "id": "S4",
+  "metric": "Tier X executables with a source date",
+  "today": "None loaded",
+  "target": "100%",
+  "gates": "Yes",
+  "from": "W3",
+  "status": "Open",
+  "today_n": 0,
+  "target_n": 100
+ },
+ {
+  "id": "S5",
+  "metric": "Analyst-rule coverage report",
+  "today": "626-row pilot",
+  "target": "A row for every Tier X family",
+  "gates": "Yes",
+  "from": "W4",
+  "status": "Open",
+  "today_n": null,
+  "target_n": null
+ },
+ {
+  "id": "S6",
+  "metric": "G_stats goodware, vendor- and build-split, no Softonic",
+  "today": "V1 had 10,620, including Softonic",
+  "target": "≥25,000 (v0)",
+  "gates": "Yes",
+  "from": "W5–W7",
+  "status": "Open",
+  "today_n": null,
+  "target_n": 25000
+ },
+ {
+  "id": "S7",
+  "metric": "Usable .NET goodware, all splits",
+  "today": "569",
+  "target": "≥3,000; at zero FP that bounds .NET FP below 1 per 1,000",
+  "gates": "Yes",
+  "from": "W5–W7",
+  "status": "Open",
+  "today_n": 569,
+  "target_n": 3000
+ },
+ {
+  "id": "S8",
+  "metric": "G_eval goodware, vendor- and build-split",
+  "today": "Not split yet",
+  "target": "≥30,000 (v0); can grow after the freeze with new vendors",
+  "gates": "No",
+  "from": "W5–W7",
+  "status": "Open",
+  "today_n": null,
+  "target_n": 30000
+ },
+ {
+  "id": "S9",
+  "metric": "Self-packed children per claimed packer",
+  "today": "100, UPX only",
+  "target": "≥1,000 each for three native packers and ConfuserEx",
+  "gates": "Yes",
+  "from": "W8",
+  "status": "Open",
+  "today_n": 100,
+  "target_n": 1000
+ },
+ {
+  "id": "S10",
+  "metric": "UPX-tagged files with an unpack status",
+  "today": "0",
+  "target": "100%",
+  "gates": "No",
+  "from": "W8",
+  "status": "Open",
+  "today_n": 0,
+  "target_n": 100
+ },
+ {
+  "id": "S11",
+  "metric": "Confirmed-subset families with ≥10 samples",
+  "today": "4 (Tier A)",
+  "target": "Measured and reported",
+  "gates": "No",
+  "from": "W9",
+  "status": "Open",
+  "today_n": 4,
+  "target_n": null
+ },
+ {
+  "id": "S12",
+  "metric": "External label requests sent",
+  "today": "0 of 3",
+  "target": "3 of 3",
+  "gates": "No",
+  "from": "W9",
+  "status": "Open",
+  "today_n": 0,
+  "target_n": 3
+ }
+]

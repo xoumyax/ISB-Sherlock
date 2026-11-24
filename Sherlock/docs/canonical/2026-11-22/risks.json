@@ -1,0 +1,80 @@
+[
+ {
+  "id": "R1",
+  "risk": "Too few independent labels",
+  "evidence": "4 Tier A families have ≥10 samples; v0 needs 40",
+  "mitigation": "W9 config extraction now; MOTIF (A2); requests (A4); report Tier X as an upper bound"
+ },
+ {
+  "id": "R2",
+  "risk": "Learned scorer may not beat a prevalence heuristic",
+  "evidence": "V1 TPR: learned 0.138 vs prevalence_k 0.249 (static); 0.303 vs 0.337 (classifier)",
+  "mitigation": "Persistence labels on cluster-level support; set-coverage selection (D12); go/no-go at G3; if it fails, reframe C2"
+ },
+ {
+  "id": "R3",
+  "risk": "FP rates optimistic for .NET and packed software",
+  "evidence": "569 usable .NET goodware files vs 8,259 .NET malware",
+  "mitigation": "W5–W7 to ≥3,000 .NET files before the freeze; W8 self-packed set; FP per format, PE subtype and packer"
+ },
+ {
+  "id": "R4",
+  "risk": "Tier X family sizes inflated",
+  "evidence": "No TLSH collapse or alias review yet; 315 is an upper bound",
+  "mitigation": "W1–W2 recount before the freeze; a sixth MalwareBazaar run only for families below 10 clusters"
+ },
+ {
+  "id": "R5",
+  "risk": "Rule blow-up",
+  "evidence": "V1 static all/lint rules never compiled (>10,000 strings)",
+  "mitigation": "Hard string caps; the all arm capped and labelled degenerate"
+ },
+ {
+  "id": "R6",
+  "risk": "Schedule clash with the agent paper",
+  "evidence": "Agent paper targets NDSS (est. early May 2027), the same weeks as the experiments",
+  "mitigation": "Freeze ISB data at G1 (13 Dec); run the drift replay unattended on the cluster"
+ },
+ {
+  "id": "R7",
+  "risk": "Disarmed MOTIF binaries distort pe conditions",
+  "evidence": "Zeroed machine and subsystem header fields",
+  "mitigation": "Re-arm from metadata or exclude those pe fields for MOTIF files"
+ },
+ {
+  "id": "R8",
+  "risk": "Collection outruns the freeze",
+  "evidence": "Nine workstreams in three weeks, with Thanksgiving in week 1",
+  "mitigation": "Gate on the seven gating rows only; fallback freeze 20 Dec; G_eval and labels grow afterwards"
+ },
+ {
+  "id": "R9",
+  "risk": "Agent sandbox can't reach the network or submit SLURM jobs",
+  "evidence": "DNS failures in runs 268 and 274",
+  "mitigation": "Run pulls and sbatch from your own shell; agents prepare scripts and verify outputs"
+ },
+ {
+  "id": "R10",
+  "risk": "OS and NuGet files swamp the goodware index",
+  "evidence": "Microsoft strings would dominate the DF statistics",
+  "mitigation": "Cap each source in the index; report FP per origin and per PE subtype"
+ },
+ {
+  "id": "R11",
+  "risk": "Circular confirmed labels",
+  "evidence": "Some extractors run only after a YARA hit",
+  "mitigation": "Count only full structured parses; circularity probe in E6"
+ },
+ {
+  "id": "R12",
+  "risk": "The rewrite slips the build",
+  "evidence": "3,474 lines of V1 to redo, from scratch",
+  "mitigation": "Port V1's lessons as tests first; G2 parity on V1's split before anything new; V1 stays runnable"
+ },
+ {
+  "id": "R13",
+  "risk": "The move delays enrichment or strands V1's artifacts",
+  "evidence": "V1's experiment artifacts, YaraGen/StaticFeatures and the corpus project's memory notes were not in the migration set (DATASET_STRUCTURE.md §8)",
+  "mitigation": "Copy V1's split files, exp2 outputs and goodware indexes before decommissioning; start W1 and W3 from metadata.zip, which needs no sample extraction"
+ }
+]

@@ -1,0 +1,5 @@
+[
+  {"id": "A", "regime": "A", "short": "Tier A", "label": "Tier A: MOTIF exact hash + report provenance", "samples": 155, "families": 54, "ge10": 4, "ge20": 1, "ge40": 0, "ge80": 0, "eval_allowed": "Yes"},
+  {"id": "X", "regime": "X", "short": "Tier X", "label": "Tier X: MalwareBazaar signature, runs I–V (executables)", "samples": 17845, "families": 315, "ge10": 315, "ge20": 315, "ge40": 301, "ge80": 38, "eval_allowed": "No (kit rule 8)"},
+  {"id": "B", "regime": "B", "short": "Tier B", "label": "Tier B: multi-engine consensus", "samples": 0, "families": 0, "ge10": 0, "ge20": 0, "ge40": 0, "ge80": 0, "eval_allowed": "Yes, as sensitivity"}
+]

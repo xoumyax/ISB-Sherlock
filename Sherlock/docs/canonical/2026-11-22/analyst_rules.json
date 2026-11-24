@@ -1,0 +1,6 @@
+[
+  {"id": "elastic", "source": "Elastic protections-artifacts", "rules": 3069, "rule_names": "Kept", "distinct_hashes": 5640, "sha256_in_pool": 12, "family_meta": "Every row", "use": "Family-matched supervision; review Elastic License 2.0 before releasing derived rules"},
+  {"id": "sigbase", "source": "Neo23x0 signature-base", "rules": 4581, "rule_names": "Kept", "distinct_hashes": 6510, "sha256_in_pool": 103, "family_meta": "41 rows", "use": "Supervision; family parsed from rule names"},
+  {"id": "yaraforge", "source": "YARA-Forge", "rules": 12452, "rule_names": "Kept", "distinct_hashes": 21540, "sha256_in_pool": 180, "family_meta": "534 rows", "use": "Deduplicate first: 6,478 of signature-base's 6,510 hashes recur here"},
+  {"id": "v1crawled", "source": "V1 crawled corpus (59 repos)", "rules": 305697, "rule_names": "Stripped", "distinct_hashes": null, "sha256_in_pool": null, "family_meta": "None", "use": "V1 baseline for the analyst arm only"}
+]

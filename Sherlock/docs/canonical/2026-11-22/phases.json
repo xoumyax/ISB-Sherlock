@@ -1,0 +1,92 @@
+[
+ {
+  "id": "P0",
+  "phase": "Decide and set up",
+  "workstream": "Setup",
+  "start": "2026-11-23",
+  "end": "2026-12-04",
+  "deliverables": "Migration acceptance on the new cluster (counts, hashes, permissions, working manifest copy); approvals A1–A8; D1–D12 recorded; sherlock env from environment.yml plus a lock file; Sherlock repo skeleton (package, config roots, ruff, mypy, pytest); V1 parity fixtures, if V1's artifacts were brought over",
+  "gate": "G0: on the new cluster, the skeleton resolves samples by sha256 through sherlock_manifest.csv and round-trips Candidate records; the legacy suite is green; V1 parity fixtures frozen",
+  "gate_date": "2026-12-04"
+ },
+ {
+  "id": "P1",
+  "phase": "Enrichment and split freeze",
+  "workstream": "Data",
+  "start": "2026-11-23",
+  "end": "2026-12-13",
+  "deliverables": "W1–W9: TLSH/SDhash collapse and recount; alias decisions; source dates and drift windows; analyst-rule string hits; Windows, Linux-shipped PE/.NET, winget and NuGet goodware; UPX unpacking and the self-packed set; config-extraction labels. Then the family-disjoint split (extending V1's 38) and the vendor- and build-disjoint goodware split without Softonic",
+  "gate": "G1: every gating stop criterion passes; splits frozen and hashed; no alias group, vendor, OS build or TLSH cluster straddles a split. Fallback date 20 Dec",
+  "gate_date": "2026-12-13"
+ },
+ {
+  "id": "P2",
+  "phase": "Post-freeze growth",
+  "workstream": "Data",
+  "start": "2026-12-14",
+  "end": "2027-03-05",
+  "deliverables": "Confirmed labels on already-placed samples (MOTIF, Malpedia, VirusTotal/ClarAVy, BODMAS/EMBER); G_eval and G_ood from new vendors; monthly cumulative-update snapshots (stretch); UPX header repair",
+  "gate": "Data cut: labels, G_eval and G_ood fixed for the experiment runs",
+  "gate_date": "2027-03-05"
+ },
+ {
+  "id": "P3",
+  "phase": "Core and front end",
+  "workstream": "Build",
+  "start": "2026-12-01",
+  "end": "2027-01-22",
+  "deliverables": "Sherlock core, data, extract (PE, .NET CLR, packing, spans), grammar and stats packages written fresh; V1 lessons as named tests; extraction cache reused by sha256; DF and span indexes on the frozen G_stats; byte-CNN retrain on the frozen F_train (GPU)",
+  "gate": "G2 parity: on V1's 38-family split, Sherlock's all, lint and prevalence_k arms reproduce V1's F_dev numbers within tolerance, every gap explained; then rerun on the new split",
+  "gate_date": "2027-01-22"
+ },
+ {
+  "id": "P4",
+  "phase": "Selection",
+  "workstream": "Build",
+  "start": "2027-01-11",
+  "end": "2027-02-19",
+  "deliverables": "Logged expressibility and lint; persistence labels on time-ordered support; family-matched analyst hits (W4); GBDT scorer; set-coverage selection (D12) beside type_cover; analyst arm with real rule families; packer-aware variant",
+  "gate": "G3 go/no-go: learned beats prevalence_k on F_dev TPR at matched FP/1k",
+  "gate_date": "2027-02-19"
+ },
+ {
+  "id": "P5",
+  "phase": "Conditions and FP gate",
+  "workstream": "Build",
+  "start": "2027-02-01",
+  "end": "2027-03-12",
+  "deliverables": "Template generator; grammar-constrained condition adapter (strings with modifiers, pe, math, filesize, counts, .NET); FP gate on G_stats with repair or reject; operating points; string caps",
+  "gate": "G4: every rule compiles; 0 FP on G_stats at the default point; no rule over the string cap",
+  "gate_date": "2027-03-12"
+ },
+ {
+  "id": "P6",
+  "phase": "Harness and baselines",
+  "workstream": "Eval",
+  "start": "2027-02-15",
+  "end": "2027-03-19",
+  "deliverables": "Namespaced compile and single-pass scan; family-clustered bootstrap, paired tests, Holm; yarGen (G_stats DB and stock), AutoPYara, AutoYara, frontier-LLM baseline",
+  "gate": "G5: self-match excluded from TP; each baseline reproduces its documented behaviour",
+  "gate_date": "2027-03-19"
+ },
+ {
+  "id": "P7",
+  "phase": "Experiments",
+  "workstream": "Eval",
+  "start": "2027-03-15",
+  "end": "2027-05-14",
+  "deliverables": "E1–E11 runs, drift replay, robustness subsets, figures",
+  "gate": "G6: every headline cell has a CI; confirmed-subset deltas computed",
+  "gate_date": "2027-05-14"
+ },
+ {
+  "id": "P8",
+  "phase": "Paper and artifact",
+  "workstream": "Paper",
+  "start": "2027-04-26",
+  "end": "2027-06-03",
+  "deliverables": "Draft; anonymous artifact (hash lists, splits, rules, code); Open Science and ethics appendices",
+  "gate": "Submit to S&P 2028 Cycle 1 (est.); fallback USENIX Security '28 Cycle 1 (est.)",
+  "gate_date": "2027-06-03"
+ }
+]

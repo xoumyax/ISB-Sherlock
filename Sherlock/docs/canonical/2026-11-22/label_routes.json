@@ -1,0 +1,66 @@
+[
+ {
+  "id": "config",
+  "route": "Static config-extractor confirmation (CAPE parsers, MWCP, malduck) over the Tier X pool",
+  "tier": "A (confirmed)",
+  "blocker": "A3: run extractors in a no-network container; count only full structured parses",
+  "unlocks": "A confirmed subset inside existing Tier X families, many of them .NET RATs and stealers",
+  "status": "Week 1 (W9)"
+ },
+ {
+  "id": "motif_archive",
+  "route": "MOTIF disarmed archive (~1.47 GB)",
+  "tier": "A",
+  "blocker": "Your approval (A2)",
+  "unlocks": "Report-derived families; header fields need re-arming",
+  "status": "Awaiting approval"
+ },
+ {
+  "id": "mb33",
+  "route": "33-file MalwareBazaar acquisition of MOTIF-matched hashes",
+  "tier": "A",
+  "blocker": "Your approval (A2)",
+  "unlocks": "At most one more family above 10 samples",
+  "status": "Awaiting approval"
+ },
+ {
+  "id": "malpedia",
+  "route": "Malpedia sample-membership export",
+  "tier": "A",
+  "blocker": "Request A4 (register.md #2)",
+  "unlocks": "Analyst-curated families; packed, unpacked and dumped triples",
+  "status": "Request this week"
+ },
+ {
+  "id": "vt",
+  "route": "VirusTotal academic, then ClarAVy/AVClass consensus",
+  "tier": "B",
+  "blocker": "Request A4 (register.md #1)",
+  "unlocks": "Tier B labels, goodware vetting and real first-seen dates",
+  "status": "Request this week"
+ },
+ {
+  "id": "ember",
+  "route": "BODMAS / EMBER2024 label-only export",
+  "tier": "B",
+  "blocker": "Request A4 to the maintainers; EMBER archives hold no label-only members",
+  "unlocks": "Tier B labels for hash-joined samples",
+  "status": "Request this week"
+ },
+ {
+  "id": "reports",
+  "route": "Analyst-report IOC appendices",
+  "tier": "A candidate",
+  "blocker": "Manual review effort",
+  "unlocks": "Report-linked samples",
+  "status": "Not started"
+ },
+ {
+  "id": "tlsh",
+  "route": "Propagate Tier A labels through tight TLSH clusters, flagged",
+  "tier": "Propagated (training only)",
+  "blocker": "W1 clusters: TLSH ≤ 30 with SDhash agreement",
+  "unlocks": "Training labels around the seed families; never an evaluation label",
+  "status": "After W1"
+ }
+]

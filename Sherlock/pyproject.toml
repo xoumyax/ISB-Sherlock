@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sherlock"
+version = "0.0.0"
+description = "ISB vN (Sherlock): choose the indicators that go into a YARA rule built from binaries"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+include = ["sherlock*"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "--import-mode=importlib -ra --strict-markers"
+markers = [
+    "legacy: V1's own suites, run against legacy/V1 (the parity oracle's health check)",
+    "needs_data: reads the real dataset; skipped unless ISB_DATA is set",
+    "slow: takes more than a few seconds",
+    "gpu: needs a GPU",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+extend-exclude = ["legacy", "third_party", "tests/legacy"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_ignores = true
+ignore_missing_imports = true
+exclude = ["^legacy/", "^third_party/", "^tests/legacy/"]
+
+[[tool.mypy.overrides]]
+module = ["sherlock.core.*", "sherlock.data.*", "sherlock.select.*"]
+disallow_untyped_defs = true
