@@ -333,50 +333,66 @@ def parse_release(body: str) -> dict[str, Any]:
 
 
 def bounded_decompress(data: bytes, kind: str, max_out: int) -> bytes:
-    """Decompress ``xz``/``gz``/``plain`` with an output bound; ValueError past it."""
+    """Decompress ``xz``/``gz``/``plain`` with an output bound; ValueError past it.
+
+    Concatenated streams are accepted, as xz(1) and gzip(1) accept them: Ubuntu
+    noble's Packages.xz failed as "trailing data" in the 25 Nov smoke run. xz stream
+    padding (NUL bytes) between streams is skipped. The bound covers all streams.
+    """
     if kind == "plain":
         if len(data) > max_out:
             raise ValueError("index exceeds decompressed bound")
         return data
+    if kind not in ("xz", "gz"):
+        raise ValueError(f"unknown compression {kind!r}")
     chunk = _MiB
     out = bytearray()
-    if kind == "xz":
-        xd = lzma.LZMADecompressor()
-        buf = data
-        while True:
-            try:
-                piece = xd.decompress(buf, max_length=chunk)
-            except lzma.LZMAError as e:
-                raise ValueError(f"bad xz stream: {e}") from e
-            buf = b""
-            out += piece
-            if len(out) > max_out:
-                raise ValueError("index exceeds decompressed bound")
-            if xd.eof:
-                if xd.unused_data:
-                    raise ValueError("trailing data after xz stream")
-                return bytes(out)
-            if xd.needs_input:
-                raise ValueError("truncated xz stream")
-    if kind == "gz":
-        zd = zlib.decompressobj(16 + zlib.MAX_WBITS)
-        buf = data
-        while True:
-            try:
-                piece = zd.decompress(buf, chunk)
-            except zlib.error as e:
-                raise ValueError(f"bad gzip stream: {e}") from e
-            buf = zd.unconsumed_tail
-            out += piece
-            if len(out) > max_out:
-                raise ValueError("index exceeds decompressed bound")
-            if zd.eof:
-                if zd.unused_data:
-                    raise ValueError("trailing data after gzip stream")
-                return bytes(out)
-            if not buf and not piece:
-                raise ValueError("truncated gzip stream")
-    raise ValueError(f"unknown compression {kind!r}")
+    rest = data
+    while True:  # one compressed stream per pass
+        if kind == "xz":
+            xd = lzma.LZMADecompressor()
+            buf = rest
+            while True:
+                try:
+                    piece = xd.decompress(buf, max_length=chunk)
+                except lzma.LZMAError as e:
+                    raise ValueError(f"bad xz stream: {e}") from e
+                buf = b""
+                out += piece
+                if len(out) > max_out:
+                    raise ValueError("index exceeds decompressed bound")
+                if xd.eof:
+                    rest = xd.unused_data
+                    break
+                if xd.needs_input:
+                    raise ValueError("truncated xz stream")
+            stripped = rest.lstrip(b"\0")
+            if (len(rest) - len(stripped)) % 4:
+                raise ValueError("bad xz stream padding")
+            rest = stripped
+            if rest and not rest.startswith(b"\xfd7zXZ\x00"):
+                raise ValueError("trailing data after xz stream")
+        else:
+            zd = zlib.decompressobj(16 + zlib.MAX_WBITS)
+            buf = rest
+            while True:
+                try:
+                    piece = zd.decompress(buf, chunk)
+                except zlib.error as e:
+                    raise ValueError(f"bad gzip stream: {e}") from e
+                buf = zd.unconsumed_tail
+                out += piece
+                if len(out) > max_out:
+                    raise ValueError("index exceeds decompressed bound")
+                if zd.eof:
+                    rest = zd.unused_data
+                    break
+                if not buf and not piece:
+                    raise ValueError("truncated gzip stream")
+            if rest and not rest.startswith(b"\x1f\x8b"):
+                raise ValueError("trailing data after gzip stream")
+        if not rest:
+            return bytes(out)
 
 
 # -- planning --
@@ -451,34 +467,40 @@ def _read_repo(
             weak = any(p in rel["weak_only"] for p, _k in names)
             _bump(dropped, "index_weak_digest_only" if weak else "index_not_in_release")
             continue
-        data = None
-        too_large = False
-        for path, kind in listed:
+        text: str | None = None
+        reason = "index_fetch_failed"
+        for path, kind in listed:  # xz, then gz, then plain: first that works
             size, digests = rel["files"][path]
             if size > cfg.max_index_bytes:
-                too_large = True
+                reason = "index_too_large"
+                rs.setdefault("index_errors", []).append(f"{path}: too large")
                 continue
             try:
                 body = get(f"{dists}/{path}", cfg.max_index_bytes)
-            except Exception:  # noqa: BLE001 - try the next listed compression
+            except Exception as e:  # noqa: BLE001 - try the next listed compression
+                reason = "index_fetch_failed"
+                rs.setdefault("index_errors", []).append(
+                    f"{path}: fetch {type(e).__name__}"
+                )
                 continue
-            data = (path, kind, body, size, digests)
+            if len(body) != size or any(
+                hashlib.new(alg, body).hexdigest() != hexd
+                for alg, hexd in digests.items()
+            ):
+                reason = "index_digest_mismatch"
+                rs.setdefault("index_errors", []).append(f"{path}: digest mismatch")
+                continue
+            try:
+                text = bounded_decompress(
+                    body, kind, cfg.max_index_decompressed_bytes
+                ).decode("utf-8", errors="replace")
+            except ValueError as e:
+                reason = "index_decompress_failed"
+                rs.setdefault("index_errors", []).append(f"{path}: decompress {e}")
+                continue
             break
-        if data is None:
-            _bump(dropped, "index_too_large" if too_large else "index_fetch_failed")
-            continue
-        path, kind, body, size, digests = data
-        if len(body) != size or any(
-            hashlib.new(alg, body).hexdigest() != hexd for alg, hexd in digests.items()
-        ):
-            _bump(dropped, "index_digest_mismatch")
-            continue
-        try:
-            text = bounded_decompress(
-                body, kind, cfg.max_index_decompressed_bytes
-            ).decode("utf-8", errors="replace")
-        except ValueError:
-            _bump(dropped, "index_decompress_failed")
+        if text is None:
+            _bump(dropped, reason)
             continue
         url = f"{dists}/{path}"
         anchors[f"{source}/{spec.label}/{path}"] = body

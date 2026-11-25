@@ -605,3 +605,38 @@ def test_pmc_plan_uses_pmc_source():
         "pmc:pmc-ubuntu-24.04/noble/powershell_7.4.6-1.deb_amd64"
     ]
     assert "pmc/pmc-ubuntu-24.04/noble/InRelease" in res.anchors
+
+
+# -- smoke run 25 Nov: Ubuntu noble's indexes failed to decompress --------------
+
+
+def test_concatenated_xz_and_gzip_streams_accepted():
+    """xz(1) and gzip(1) accept concatenated streams; so must we (noble, 25 Nov)."""
+    a, b = b"Package: a\n\n" * 5000, b"Package: b\n\n" * 5000
+    assert bounded_decompress(lzma.compress(a) + lzma.compress(b), "xz", 1 << 20) == a + b
+    assert bounded_decompress(gzip.compress(a) + gzip.compress(b), "gz", 1 << 20) == a + b
+    # xz stream padding (NUL bytes in multiples of four) between streams is allowed
+    padded = lzma.compress(a) + b"\0" * 8 + lzma.compress(b)
+    assert bounded_decompress(padded, "xz", 1 << 20) == a + b
+    with pytest.raises(ValueError):  # the bound covers all streams together
+        bounded_decompress(lzma.compress(a) + lzma.compress(b), "xz", len(a) + 10)
+    with pytest.raises(ValueError):  # garbage after a stream is still refused
+        bounded_decompress(lzma.compress(a) + b"junk", "xz", 1 << 20)
+
+
+def test_failed_xz_index_falls_back_to_gz():
+    pk = _packages(_stanza("wine", "10.0-1"))
+    bad_xz = b"\xfd7zXZ\x00" + b"\x00" * 40  # listed with matching digest, undecodable
+    listed = {
+        "main/binary-amd64/Packages.xz": bad_xz,
+        "main/binary-amd64/Packages.gz": gzip.compress(pk),
+    }
+    urls = _repo(BASE, "trixie", {}, listed=listed, served=listed)
+    res = apt.plan(FakeGetter(urls), _cfg(_spec()))
+    assert len(res.items) == 1
+    assert res.stats["per_repo"]["deb/trixie"]["indexes"] == [
+        "main/binary-amd64/Packages.gz"
+    ]
+    errs = res.stats["per_repo"]["deb/trixie"]["index_errors"]
+    assert errs and errs[0].startswith("main/binary-amd64/Packages.xz: decompress")
+    assert "index_decompress_failed" not in res.dropped
